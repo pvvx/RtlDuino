@@ -33,11 +33,11 @@
 /* DAC pin mapping */
 #define DAC0 36
 
-#define TOTAL_GPIO_PIN_NUM	(21)
+#define TOTAL_GPIO_PIN_NUM	(19)
 #define TOTAL_PWM_PIN_NUM   ( 4)
 
-#define LED_BUILTIN 4
-#define SS 10
+#define LED_BUILTIN 2
+#define SS 8
 
 #ifdef __cplusplus
 extern "C"{
