@@ -10,4 +10,7 @@ Not everything is working yet, you can not get it through package manager, but y
 - Clone this repository into hardware/development/rtl87xx directory (or clone it elsewhere and create a symlink)
 - Restart Arduino
 
+### Pins RTL00
+![SCH](https://github.com/pvvx/RtlDuino/blob/master/ArduinoRTL00.gif)
+
 
