@@ -1,0 +1,2 @@
+hal_efuse.c +
+hal_pinmux.c +
