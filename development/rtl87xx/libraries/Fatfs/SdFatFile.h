@@ -1,10 +1,6 @@
 #ifndef _SDFATFILE_H_
 #define _SDFATFILE_H_
 
-#if defined(BOARD_RTL8710)
-// #error "RTL8710 do not support SDIO"
-#endif
-
 #include <inttypes.h>
 #include <Stream.h>
 

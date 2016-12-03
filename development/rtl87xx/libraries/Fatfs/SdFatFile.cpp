@@ -1,5 +1,3 @@
-// #if !defined(BOARD_RTL8710)
-
 #include "SdFatFile.h"
 #include "Arduino.h"
 
@@ -98,4 +96,3 @@ int SdFatFile::close() {
     return -ret;
 }
 
-// #endif // #if !defined(BOARD_RTL8710)

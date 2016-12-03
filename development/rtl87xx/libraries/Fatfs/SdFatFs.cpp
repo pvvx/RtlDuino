@@ -1,11 +1,12 @@
-// #if !defined(BOARD_RTL8710)
-
 #include "SdFatFs.h"
 #include "Arduino.h"
+#include "pinmap.h"
 
 #ifdef __cplusplus
 extern "C" {
 
+#include "gpio_api.h"
+#include "sdio_host.h"
 #include "sdio_host.h"
 #include <disk_if/inc/sdcard.h>
 
@@ -19,6 +20,35 @@ char RDBuf[TEST_SIZE];
 
 int sdioInitErr = FR_OK;
 
+#if defined(BOARD_RTL8710) 
+
+extern "C" unsigned short GPIOState[];
+
+void SdFatFs::WP_Off() {
+		GPIOState[0] &= ~(3<<6);
+		pin_mode(PA_7, PullDown);
+}    	
+
+void SdFatFs::WP_On() {
+		GPIOState[0] &= ~(3<<6);
+		pin_mode(PA_7, PullDown);
+}    	
+
+void SdFatFs::InsertSD() {
+		GPIOState[0] &= ~(3<<6);
+		pin_mode(PA_6, PullUp);
+		delay(10);
+		pin_mode(PA_6, PullDown);
+		delay(10);
+}    	
+
+void SdFatFs::RemoveSD()
+{
+		GPIOState[0] &= ~(3<<6);
+		pin_mode(PA_6, PullUp);
+}
+#endif    
+
 SdFatFs::SdFatFs() {
     m_fs = NULL;
     drv_num = -1;
@@ -26,6 +56,20 @@ SdFatFs::SdFatFs() {
     logical_drv[1] = ':';
     logical_drv[2] = '/';
     logical_drv[3] = '\0';
+#if defined(BOARD_RTL8710)
+	GPIOState[0] &= ~((1<<8)-1);
+/* debug test		
+	 ConfigDebugErr  = -1;
+	 ConfigDebugInfo = ~_DBG_SPI_FLASH_;
+	 ConfigDebugWarn = -1;
+	 CfgSysDebugErr = -1;
+	 CfgSysDebugInfo = -1;
+	 CfgSysDebugWarn = -1;
+*/	 
+	for(int i = 0; i < 8; i++) pin_mode((PinName)i, PullUp);
+	pin_mode(PA_6, PullDown);
+//	pin_mode(PA_7, PullUp);
+#endif    
     if( sdio_init_host() != 0 ){
     	printf("SDIO host init fail.\n");
     	sdioInitErr = FR_DISK_ERR;      
@@ -37,8 +81,10 @@ SdFatFs::~SdFatFs() {
 }
 
 int SdFatFs::begin() {
-    FRESULT ret = FR_OK;
 
+//	pin_mode(PA_6, PullDown);
+
+    FRESULT ret = FR_OK;
     do {
         m_fs = (FATFS *) malloc (sizeof(FATFS));
         if (m_fs == NULL) {
@@ -92,6 +138,8 @@ int SdFatFs::end() {
     }
 
     drv_num = -1;
+
+	pin_mode(PA_6, PullUp);
 
     return -ret;
 }
@@ -346,4 +394,4 @@ int SdFatFs::getAttribute(char *absolute_path, unsigned char *attr) {
     return -ret;
 }
 
-//#endif // #if !defined(BOARD_RTL8710)
+

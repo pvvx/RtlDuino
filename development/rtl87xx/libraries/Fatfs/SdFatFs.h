@@ -1,8 +1,8 @@
 #ifndef _SDFATFS_H_
 #define _SDFATFS_H_
 
-#if defined(BOARD_RTL8710)
-// #error "RTL8710 do not support SDIO"
+#if defined(ARDUINO_AMEBA)
+// #error "Ameba Boadr do not support RtlDuino!"
 #endif
 
 #include "SdFatFile.h"
@@ -36,7 +36,12 @@ public:
      * @brief Deinitialize SD FAT File System
      */
     int end();
-
+#if defined(BOARD_RTL8710) 
+	void WP_Off();
+	void WP_On();
+	void InsertSD();
+	void RemoveSD();
+#endif
     /**
      * @brief Get root path of the SD FAT File System
      *
