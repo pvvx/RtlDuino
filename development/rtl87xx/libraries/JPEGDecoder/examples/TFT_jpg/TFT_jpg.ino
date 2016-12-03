@@ -15,13 +15,13 @@
    Used TFT ST7735 128x160
 */
 #include <Raw_ST7735.h> // Hardware-specific library
-// These pins will also work for the 1.8" TFT shield
-#define TFT_CS    10  // PC_0
-#define TFT_RST   2   // PA_5  // you can also connect this to the Arduino reset
+// These pins will also work for the 1.8" TFT shield (RTL00 module + TFT ST7735 128x160)
+#define TFT_CS    8   // PC_0
+#define TFT_RST   5   // PA_5  // you can also connect this to the Arduino reset
 // in which case, set this #define pin to 0!
-#define TFT_DC    5   // PA_4
-#define TFT_SCLK  13  // PC_1 // set these to be whatever pins you like!
-#define TFT_MOSI  11  // PC_2 // set these to be whatever pins you like!
+#define TFT_DC    4   // PA_4
+#define TFT_SCLK  9   // PC_1 // set these to be whatever pins you like!
+#define TFT_MOSI  10  // PC_2 // set these to be whatever pins you like!
 Raw_ST7735 tft = Raw_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 // JPEG decoder library

@@ -5,6 +5,15 @@
 #include <SPI.h>
 #include "yspng.h"
 
+// These pins will also work for the 1.8" TFT shield (RTL00 module + TFT ST7735 128x160)
+#define TFT_CS    8   // PC_0
+#define TFT_RST   5   // PA_5  // you can also connect this to the Arduino reset
+// in which case, set this #define pin to 0!
+#define TFT_DC    4   // PA_4
+#define TFT_SCLK  9   // PC_1 // set these to be whatever pins you like!
+#define TFT_MOSI  10  // PC_2 // set these to be whatever pins you like!
+Raw_ST7735 tft = Raw_ST7735(TFT_CS, TFT_DC, TFT_RST);
+
 const unsigned char png_data[]  = {
   0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
   0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52,
@@ -1067,15 +1076,6 @@ const unsigned char png_data[]  = {
 };
 
 YsPngBinaryMemoryStream pngms(sizeof(png_data), (unsigned char *)png_data);
-
-// These pins will also work for the 1.8" TFT shield
-#define TFT_CS    10  // PC_0
-#define TFT_RST   2   // PA_5  // you can also connect this to the Arduino reset
-// in which case, set this #define pin to 0!
-#define TFT_DC    5   // PA_4
-#define TFT_SCLK  13  // PC_1 // set these to be whatever pins you like!
-#define TFT_MOSI  11  // PC_2 // set these to be whatever pins you like!
-Raw_ST7735 tft = Raw_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 class ST7735PngDecoder : public YsRawPngDecoder {
   public:
