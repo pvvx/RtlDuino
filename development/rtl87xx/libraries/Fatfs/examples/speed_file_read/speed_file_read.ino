@@ -4,7 +4,12 @@
 
 #include "SdFatFs.h"
 
-void setup() {}
+void setup() {
+  for (int i = 512; i < 64 * 1024; i <<= 1) {
+    test(i);
+    delay(1000);
+  }
+}
 
 void test(int rd_buf_size) {
   uint16_t year   = 2016;
@@ -50,7 +55,7 @@ void test(int rd_buf_size) {
       i = printf("%d ms", time);
       if (i < 8) printf("\t");
       if (i < 16) printf("\t");
-      if(!time) time = 1;
+      if (!time) time = 1;
       printf("\t%d KB/s\r\n", file_size / time);
       file.close();
     }
@@ -65,8 +70,5 @@ void test(int rd_buf_size) {
 }
 
 void loop() {
-  for(int i = 512; i < 64*1024; i <<= 1) {
-    test(i);
-    delay(1000);
-  }
+
 }

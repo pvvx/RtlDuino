@@ -23,6 +23,7 @@ int sdioInitErr = FR_OK;
 #if defined(BOARD_RTL8710) 
 
 extern "C" unsigned short GPIOState[];
+extern "C" void HalPinCtrlRtl8195A(int,int,int);
 
 void SdFatFs::WP_Off() {
 		GPIOState[0] &= ~(3<<6);
@@ -36,10 +37,8 @@ void SdFatFs::WP_On() {
 
 void SdFatFs::InsertSD() {
 		GPIOState[0] &= ~(3<<6);
-		pin_mode(PA_6, PullUp);
-		delay(10);
 		pin_mode(PA_6, PullDown);
-		delay(10);
+		delay(2);
 }    	
 
 void SdFatFs::RemoveSD()
@@ -57,23 +56,27 @@ SdFatFs::SdFatFs() {
     logical_drv[2] = '/';
     logical_drv[3] = '\0';
 #if defined(BOARD_RTL8710)
-	GPIOState[0] &= ~((1<<8)-1);
-/* debug test		
+#if 0 /* debug test */
 	 ConfigDebugErr  = -1;
 	 ConfigDebugInfo = ~_DBG_SPI_FLASH_;
 	 ConfigDebugWarn = -1;
 	 CfgSysDebugErr = -1;
 	 CfgSysDebugInfo = -1;
 	 CfgSysDebugWarn = -1;
-*/	 
-	for(int i = 0; i < 8; i++) pin_mode((PinName)i, PullUp);
+#endif	 
+	GPIOState[0] &= ~((1<<8)-1);
+	for(int i = 0; i < 7; i++) pin_mode((PinName)i, PullNone);
+	pin_mode(PA_7, PullDown);
 	pin_mode(PA_6, PullDown);
-//	pin_mode(PA_7, PullUp);
+	*((volatile unsigned int *)0x40000020) = (*((volatile unsigned int *)0x40000020) & 0xFF0FFFFF) | 0x900000;	
 #endif    
     if( sdio_init_host() != 0 ){
     	printf("SDIO host init fail.\n");
     	sdioInitErr = FR_DISK_ERR;      
     }
+	uint32_t i = sdio_sd_getCapacity();
+	printf("\nSD Capacity: %d sectors (%d GB | %d MB | %d KB)\n", i,
+				i >> 21, i >> 11, i >> 1);
 }
 
 SdFatFs::~SdFatFs() {
