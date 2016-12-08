@@ -7,7 +7,6 @@ extern "C" {
 
 #include "gpio_api.h"
 #include "sdio_host.h"
-#include "sdio_host.h"
 #include <disk_if/inc/sdcard.h>
 
 }
@@ -26,24 +25,20 @@ extern "C" unsigned short GPIOState[];
 extern "C" void HalPinCtrlRtl8195A(int,int,int);
 
 void SdFatFs::WP_Off() {
-		GPIOState[0] &= ~(3<<6);
 		pin_mode(PA_7, PullDown);
 }    	
 
 void SdFatFs::WP_On() {
-		GPIOState[0] &= ~(3<<6);
 		pin_mode(PA_7, PullDown);
 }    	
 
 void SdFatFs::InsertSD() {
-		GPIOState[0] &= ~(3<<6);
 		pin_mode(PA_6, PullDown);
 		delay(2);
 }    	
 
 void SdFatFs::RemoveSD()
 {
-		GPIOState[0] &= ~(3<<6);
 		pin_mode(PA_6, PullUp);
 }
 #endif    
@@ -55,32 +50,22 @@ SdFatFs::SdFatFs() {
     logical_drv[1] = ':';
     logical_drv[2] = '/';
     logical_drv[3] = '\0';
-#if defined(BOARD_RTL8710)
-#if 0 /* debug test */
-	 ConfigDebugErr  = -1;
-	 ConfigDebugInfo = ~_DBG_SPI_FLASH_;
-	 ConfigDebugWarn = -1;
-	 CfgSysDebugErr = -1;
-	 CfgSysDebugInfo = -1;
-	 CfgSysDebugWarn = -1;
-#endif	 
-	GPIOState[0] &= ~((1<<8)-1);
-	for(int i = 0; i < 7; i++) pin_mode((PinName)i, PullNone);
-	pin_mode(PA_7, PullDown);
-	pin_mode(PA_6, PullDown);
-	*((volatile unsigned int *)0x40000020) = (*((volatile unsigned int *)0x40000020) & 0xFF0FFFFF) | 0x900000;	
-#endif    
-    if( sdio_init_host() != 0 ){
+
+    if(sdio_sd_init() != 0){
     	printf("SDIO host init fail.\n");
     	sdioInitErr = FR_DISK_ERR;      
     }
-	uint32_t i = sdio_sd_getCapacity();
-	printf("\nSD Capacity: %d sectors (%d GB | %d MB | %d KB)\n", i,
+    else {
+	    if(sdio_sd_status() >=0) {
+	    	uint32_t i = sdio_sd_getCapacity();
+			printf("\nSD Capacity: %d sectors (%d GB | %d MB | %d KB)\n", i,
 				i >> 21, i >> 11, i >> 1);
+		}
+    }
 }
 
 SdFatFs::~SdFatFs() {
-    sdio_deinit_host();
+	sdio_sd_deinit();
 }
 
 int SdFatFs::begin() {
@@ -202,13 +187,16 @@ int SdFatFs::readDir(char *path, char *result_buf, unsigned int bufsize) {
                 fnlen = fno.fsize;
             }            
 
-            if (fno.fattrib & AM_DIR) {
+            bufidx += sprintf(result_buf + bufidx, "%s", fn);
+            bufidx++;
+/*            if (fno.fattrib & AM_DIR) {
             } else {
                 if (bufidx + fnlen + 1 < bufsize) {
                     bufidx += sprintf(result_buf + bufidx, "%s", fn);
                     bufidx++;
                 }
             }
+*/            
         }
     } while (0);
 
@@ -397,4 +385,47 @@ int SdFatFs::getAttribute(char *absolute_path, unsigned char *attr) {
     return -ret;
 }
 
+int SdFatFs::getFsize(char *absolute_path, uint32_t *size, unsigned char *attr) {
+    FRESULT ret = FR_OK;
+    FILINFO fno;
+#if _USE_LFN
+    char lfn[_MAX_LFN + 1];
+    fno.lfname = lfn;
+    fno.lfsize = sizeof(lfn);
+#endif
+    do {
+        if (drv_num < 0) {
+            ret = FR_DISK_ERR;
+            break;
+        }
+
+        ret = f_stat(absolute_path, &fno);
+        if (ret != FR_OK) {
+            break;
+        }
+        *size = fno.fsize;
+        if(attr) *attr = fno.fattrib;
+    } while (0);
+    return -ret;
+}
+
+int SdFatFs::getLabel(char *absolute_path, char *bufname, uint32_t *svn) {
+    FRESULT ret = FR_OK;
+    
+    do {
+        if (drv_num < 0) {
+            ret = FR_DISK_ERR;
+            break;
+        }
+        ret = f_getlabel(absolute_path, bufname, svn);
+        if (ret != FR_OK) {
+            break;
+        }
+    } while (0);
+    return -ret;
+}
+
+char SdFatFs::getCSD(unsigned char * csd_data) {
+	return sdio_sd_getCSD(csd_data);
+}
 

@@ -45,7 +45,7 @@
 /* To enable fast seek feature, set _USE_FASTSEEK to 1. */
 
 
-#define _USE_LABEL		0	/* 0:Disable or 1:Enable */
+#define _USE_LABEL		1	/* 0:Disable or 1:Enable */
 /* To enable volume label functions, set _USE_LAVEL to 1 */
 
 
@@ -57,7 +57,7 @@
 / Locale and Namespace Configurations
 /---------------------------------------------------------------------------*/
 
-#define _CODE_PAGE	437
+#define _CODE_PAGE	866 // 437
 /* The _CODE_PAGE specifies the OEM code page to be used on the target system.
 /  Incorrect setting of the code page can cause a file open failure.
 /

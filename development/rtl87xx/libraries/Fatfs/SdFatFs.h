@@ -9,6 +9,17 @@
 
 #define MAX_FILENAME_LEN 256
 
+/* File attribute bits for directory entry */
+
+#define	ATTR_RDO	0x01	/* Read only */
+#define	ATTR_HID	0x02	/* Hidden */
+#define	ATTR_SYS	0x04	/* System */
+#define	ATTR_VOL	0x08	/* Volume label */
+#define ATTR_LFN	0x0F	/* LFN entry */
+#define ATTR_DIR	0x10	/* Directory */
+#define ATTR_ARC	0x20	/* Archive */
+#define ATTR_MASK	0x3F	/* Mask of defined bits */
+
 /** 
  * @class SdFatFs SdFatFs.h 
  * @brief SD FAT File system
@@ -109,6 +120,22 @@ public:
      * @return Return 0 if success. Return negativate value for a failure.
      */
     int getLastModTime(char *absolute_path, uint16_t *year, uint16_t *month, uint16_t *date, uint16_t *hour, uint16_t *minute, uint16_t *second);
+
+    /* get file size and arttribute */
+    int getFsize(char *absolute_path, uint32_t *size, unsigned char *attr = NULL);
+
+    /* SD CSD size 16 bytes */
+    char getCSD(unsigned char * csd_data); 
+    
+    /*  Get volume label 
+    * @param[in] absolute_path The absolute path to be changed
+    * @param[in] bufname  Pointer to a buffer to return the volume label 
+    * @param[in] svn Pointer to a variable to return the volume serial number 
+    * @return Return 0 if success. Return negativate value for a failure.
+    */
+    
+    int getLabel(char *absolute_path, char *bufname, uint32_t *svn);
+
 
     /**
      * @brief Set last modified time for a file or directory
