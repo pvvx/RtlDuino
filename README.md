@@ -13,4 +13,7 @@ Not everything is working yet, you can not get it through package manager, but y
 ### Pins RTL00
 ![SCH](https://github.com/pvvx/RtlDuino/blob/master/ArduinoRTL00.gif)
 
+### SD cards
+![SCH](https://github.com/pvvx/RtlDuino/blob/master/SD_card.gif)
+
 
