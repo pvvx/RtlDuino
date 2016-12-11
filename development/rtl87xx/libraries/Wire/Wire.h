@@ -111,8 +111,10 @@ private:
 };
 
 extern TwoWire Wire;
+#ifndef BOARD_RTL8710
 extern TwoWire Wire1;
 extern TwoWire Wire2;
+#endif
 
 #endif
 

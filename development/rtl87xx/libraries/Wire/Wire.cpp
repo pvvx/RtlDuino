@@ -30,8 +30,10 @@ extern "C" {
 #include "i2c_api.h"
 #include "gpio_api.h"
 
+#ifdef BOARD_RTL8710
 i2c_t i2cwire1;
-#if !defined(BOARD_RTL8710)
+#else
+i2c_t i2cwire1;
 i2c_t i2cwire0;
 i2c_t i2cwire3;
 #endif
@@ -46,10 +48,12 @@ TwoWire::TwoWire(uint32_t dwSDAPin, uint32_t dwSCLPin) {
 
     if ( (dwSDAPin == PD_7 && dwSCLPin == PD_6) || (dwSDAPin == PC_4 && dwSCLPin == PC_5)) {
         this->pI2C = (void *)&i2cwire1;
+#ifndef BOARD_RTL8710
     } else if (dwSDAPin == PD_4 && dwSCLPin == PD_5) {
         this->pI2C = (void *)&i2cwire0;
     } else if (dwSDAPin == PB_3 && dwSCLPin == PB_2) {
         this->pI2C = (void *)&i2cwire3;
+#endif
     } else {
         printf("Invalid I2C pin\r\n");
     }
@@ -248,7 +252,7 @@ void TwoWire::onRequest(void(*function)(void)) {
 	onRequestCallback = function;
 }
 
-#if defined(BOARD_RTL8710)
+#ifdef BOARD_RTL8710
 // HW: I2C1
 TwoWire Wire  = TwoWire(PC_4, PC_5);
 #else

@@ -17,3 +17,4 @@ Not everything is working yet, you can not get it through package manager, but y
 ![SCH](https://github.com/pvvx/RtlDuino/blob/master/SD_card.gif)
 
 
+(More info: https://esp8266.ru/forum/threads/arduino-dlja-rtl8710.1787/ )
