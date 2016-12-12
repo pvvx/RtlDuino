@@ -67,39 +67,20 @@ SECTIONS
   .sdr_text :
   {
     __sdram_data_start__ = .;
-    *(.sdram.text*)
-    *(.p2p.text*)
-    *(.wps.text*)
-    *(.websocket.text*)
   } > SDRAM_RAM
 
   .sdr_rodata :
   {
-    *(.sdram.rodata*)
-    *(.p2p.rodata*)
-    *(.wps.rodata*)
-    *(.websocket.rodata*)
   } > SDRAM_RAM
 
   .sdr_data : 
   {
-    INCLUDE "sdram_obj_list.txt"
-    *(.sdram.data*)
-    *(.p2p.data*)
-    *(.wps.data*)
-    *(.websocket.data*)
     __sdram_data_end__ = .;
   } > SDRAM_RAM
 
   .sdr_bss :
   {
     __sdram_bss_start__ = .;
-    *(.sdram.bss*)
-    *(.p2p.bss*)
-    *(.wps.bss*)
-    *(.websocket.bss*)
-    *mem.o (.bss) 
-    *memp.o (.bss) 
     __sdram_bss_end__ = .;
   } > SDRAM_RAM
 
@@ -148,12 +129,24 @@ SECTIONS
     *(.fwu.text*)
     *(.otg.rom.text*)
     *(.text*)
+    *(.sdram.text*)
+    *(.p2p.text*)
+    *(.wps.text*)
+    *(.websocket.text*)
+    *(.sdram.rodata*)
+    *(.p2p.rodata*)
+    *(.wps.rodata*)
+    *(.websocket.rodata*)
   } > BD_RAM
 
   .ram.data : 
   {
     __data_start__ = .;
     *(.data*)
+    *(.sdram.data*)
+    *(.p2p.data*)
+    *(.wps.data*)
+    *(.websocket.data*)
     __data_end__ = .;
   	__ram_image2_text_end__ = .;    
   } > BD_RAM
@@ -168,6 +161,12 @@ SECTIONS
     *(.fwu.data*)
     *(.bss*)
     *(COMMON)
+    *(.sdram.bss*)
+    *(.p2p.bss*)
+    *(.wps.bss*)
+    *(.websocket.bss*)
+/*    *mem.o (.bss) 
+    *memp.o (.bss)  */
     *(.bdsram.data*)
     __bss_end__ = .;
     .ram.bss$$Limit = .;
