@@ -7,13 +7,23 @@
 
 #include <WiFi.h>
 #include <OTA.h>
+#include <myAP.h>
 
+#ifndef _MYAPCFG_H_
 char ssid[] = "yourNetwork";     //  your network SSID (name)
 char pass[] = "secretPassword";  // your network password
+#endif
 
 #define MY_VERSION_NUMBER 1
 #define OTA_PORT 5000
-#define RECOVER_PIN 18
+
+#if defined(BOARD_RTL8710)
+#define RECOVER_PIN 9 // PC_1, if "0" (connect gnd) -> boot OTA
+#elif defined(BOARD_RTL8711AM)
+#define RECOVER_PIN 10 // PC_1, if "0" (connect gnd) -> boot OTA
+#else
+#define RECOVER_PIN 18 // PE_5?
+#endif
 
 void setup() {
   printf("This is version %d\r\n\r\n", MY_VERSION_NUMBER);
@@ -23,7 +33,7 @@ void setup() {
 
 void loop() {
   delay(1000);
-  printf("Current system tick: %d\r\n", millis());
+  //  printf("Current system tick: %d\r\n", millis());
 }
 
 void wifi_service_thread(const void *argument) {
@@ -32,16 +42,16 @@ void wifi_service_thread(const void *argument) {
     if (WiFi.status() != WL_CONNECTED) {
       printf("WiFi is not connected. Try to connect to %s\r\n", ssid);
       while (WiFi.begin(ssid, pass) != WL_CONNECTED) {
-        printf("Failed. Wait 1s and retry...\r\n");
-        delay(1000);
+        printf("Failed. Wait 0.1s and retry...\r\n");
+        delay(100);
       }
-      printf("Connected to %s\r\n", ssid);
+      printf("\r\nConnected...\r\n");
 
       if (ota_thread_id == 0) {
         ota_thread_id = os_thread_create(ota_thread, NULL, OS_PRIORITY_REALTIME, 2048);
       }
     }
-    delay(1000); // check wifi status every 1s
+    delay(100); // check wifi status every 0.1s
   }
 
   // This line is not expected to be executed because we want to keep checking wifi status
@@ -59,10 +69,10 @@ void ota_thread(const void *argument) {
 #endif
 
   // Broadcast mDNS service at OTA_PORT that makes Arduino IDE find Ameba device
-  OTA.beginArduinoMdnsService("MyAmeba", OTA_PORT);
+  OTA.beginArduinoMdnsService("MyModule", OTA_PORT);
 
   // Listen at OTA_PORT and wait for client (Eq. Arduino IDE). Client would send OTA image and make a update.
-  while( OTA.beginLocal(OTA_PORT) < 0 ) {
+  while ( OTA.beginLocal(OTA_PORT) < 0 ) {
     printf("Retry OTA after 10s\r\n");
     delay(10000);
   }

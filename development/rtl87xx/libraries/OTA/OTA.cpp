@@ -48,10 +48,10 @@ int OTAClass::beginArduinoMdnsService(char *device_name, uint16_t port) {
 
         TXTRecordCreate((TXTRecordRef *)txtRecord, DEFAULT_OTA_MDNS_BUF, mdns_buf);
 
-        TXTRecordSetValue((TXTRecordRef *)txtRecord, "board",       strlen("ameba_rtl8195a"), "ameba_rtl8195a");
-        TXTRecordSetValue((TXTRecordRef *)txtRecord, "auth_upload", strlen("no"),             "no");
-        TXTRecordSetValue((TXTRecordRef *)txtRecord, "tcp_check",   strlen("no"),             "no");
-        TXTRecordSetValue((TXTRecordRef *)txtRecord, "ssh_upload",  strlen("no"),             "no");
+        TXTRecordSetValue((TXTRecordRef *)txtRecord, "board",       strlen("RTL00 (RTL8710)"), "RTL00 (RTL8710)");
+        TXTRecordSetValue((TXTRecordRef *)txtRecord, "auth_upload", strlen("no"),           "no");
+        TXTRecordSetValue((TXTRecordRef *)txtRecord, "tcp_check",   strlen("no"),           "no");
+        TXTRecordSetValue((TXTRecordRef *)txtRecord, "ssh_upload",  strlen("no"),           "no");
 
         mdns_service_id = mDNSRegisterService(device_name, "_arduino._tcp", "local", port, (TXTRecordRef *)txtRecord);
 
@@ -114,6 +114,7 @@ int OTAClass::beginLocal(uint16_t port, bool reboot_when_success) {
         sync_ota_addr();
 
         get_image_info(&img2_addr, &img2_len, &img3_addr, &img3_len);
+		OTA_PRINTF("FlashInfo: %p[%p], %p[%p], %p\r\n", img2_addr, img2_len, img3_addr, img3_len, ota_addr);
         img_upper_bound = img2_addr + 0x10 + img2_len; // image2 base + header + len
         if (img3_len > 0) {
             img_upper_bound += 0x10 + img3_len; // image 3 header + len
@@ -178,7 +179,7 @@ int OTAClass::beginLocal(uint16_t port, bool reboot_when_success) {
             flash_erase_sector(&flash, ota_addr + i * 4096);
         }
 
-        OTA_PRINTF("Start download\r\n");
+        OTA_PRINTF("Start download %d bytes\r\n", ota_len);
 
         // Now download OTA image
         processed_len = 0;
@@ -202,7 +203,7 @@ int OTAClass::beginLocal(uint16_t port, bool reboot_when_success) {
 
             processed_len += read_bytes;
         }
-
+        
         if (processed_len != ota_len) {
             OTA_PRINTF("Download fail\r\n");
             break;
@@ -256,7 +257,8 @@ int OTAClass::beginLocal(uint16_t port, bool reboot_when_success) {
         OTA_PRINTF("OTA fail\r\n");
     } else {
         if (reboot_when_success) {
-            sys_reset();
+        	*((volatile unsigned int *)0x40000210) = 0x111157;
+        	sys_reset();
         }
     }
 
@@ -277,11 +279,13 @@ int OTAClass::setRecoverPin(uint32_t pin1, uint32_t pin2) {
     if ( pin1 < TOTAL_GPIO_PIN_NUM ) {
         boot_pin1 = (g_APinDescription[pin1].pinname) & 0xFF;
         boot_pin1 |= 0x80;
+        OTA_PRINTF("Pin1: P%c_%d\r\n", ((boot_pin1>>4)&7)+'A', boot_pin1&0x0F);
     }
 
     if ( pin2 < TOTAL_GPIO_PIN_NUM ) {
         boot_pin2 = (g_APinDescription[pin2].pinname) & 0xFF;
         boot_pin2 |= 0x80;
+        OTA_PRINTF("Pin2: P%c_%d\r\n", ((boot_pin1>>4)&7)+'A', boot_pin1&0x0F);
     }
 
     if (boot_pin1 != 0xFF || boot_pin2 != 0xFF) {
