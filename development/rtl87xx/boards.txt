@@ -25,6 +25,10 @@ rtlmodule_rtl8710.menu.upload_method.jlinkMethod=JLink
 rtlmodule_rtl8710.menu.upload_method.jlinkMethod.upload.protocol=jlink
 rtlmodule_rtl8710.menu.upload_method.jlinkMethod.upload.tool=jlink_upload
 
+rtlmodule_rtl8710.menu.upload_method.NetworkMethod=Network
+rtlmodule_rtl8710.menu.upload_method.NetworkMethod.upload.protocol=Network
+rtlmodule_rtl8710.menu.upload_method.NetworkMethod.upload.tool=rtlmodule_tools
+
 rtlmodule_rtl8711am.name=F11AMIM13 (RTL8711AM)
 rtlmodule_rtl8711am.vid.0=0x2341
 rtlmodule_rtl8711am.pid.0=0x003d

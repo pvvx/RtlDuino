@@ -114,6 +114,12 @@ tools.rtlmodule_tools.upload.params.quiet=
 tools.rtlmodule_tools.upload.pattern="{runtime.platform.path}/tools/JLink-RunRAM.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}/tools"
 tools.rtlmodule_tools.upload.pattern.windows="{runtime.platform.path}/tools/JLink-RunRAM.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}/tools"
 tools.rtlmodule_tools.upload.pattern.macosx=
+# Network Uploader tools
+# -------------------
+
+tools.rtlmodule_tools.upload.network_pattern="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
+tools.rtlmodule_tools.network_pattern.windows="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
+tools.rtlmodule_tools.network_pattern.macosx="{runtime.tools.ameba_tools.path}/upload_ota_mac" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}/ota.bin"
 
 
 tools.jlink_upload.upload.params.verbose=
@@ -126,3 +132,6 @@ tools.jlink_upload.path.linux64=
 tools.jlink_upload.path={runtime.tools.ameba_tools.path}
 tools.jlink_upload.upload.params.quiet=
 tools.jlink_upload.upload.pattern="{runtime.platform.path}/tools/jlink_upload.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}/tools"
+tools.jlink_upload.upload.network_pattern="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
+tools.jlink_upload.network_pattern.windows="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
+tools.jlink_upload.network_pattern.macosx="{runtime.tools.ameba_tools.path}/upload_ota_mac" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}/ota.bin"
