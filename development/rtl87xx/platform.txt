@@ -109,29 +109,49 @@ recipe.size.regex=^(?:\.ram_image1.text|\.ram_image2.text|\.image3)\s+([0-9]+).*
 # rtlmodule Uploader tools
 # -------------------
 
-tools.rtlmodule_tools.upload.params.verbose=
-tools.rtlmodule_tools.upload.params.quiet=
-tools.rtlmodule_tools.upload.pattern="{runtime.platform.path}/tools/JLink-RunRAM.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}/tools"
-tools.rtlmodule_tools.upload.pattern.windows="{runtime.platform.path}/tools/JLink-RunRAM.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}/tools"
-tools.rtlmodule_tools.upload.pattern.macosx=
-# Network Uploader tools
-# -------------------
+tools.jlink.upload.params.verbose=
+tools.jlink.cmd=jlink_upload
+tools.jlink.cmd.windows=jlink_upload.bat
+tools.jlink.cmd.macosx=
+tools.jlink.path.macosx=
+tools.jlink.path.linux=
+tools.jlink.path.linux64=
+tools.jlink.path={runtime.tools.ameba_tools.path}
+tools.jlink.upload.params.quiet=
+tools.jlink.upload.pattern="{runtime.platform.path}/tools/jlink_upload.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}/tools"
 
-tools.rtlmodule_tools.upload.network_pattern="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
-tools.rtlmodule_tools.network_pattern.windows="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
-tools.rtlmodule_tools.network_pattern.macosx="{runtime.tools.ameba_tools.path}/upload_ota_mac" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}/ota.bin"
+tools.network.upload.params.verbose=
+tools.network.cmd=upload_ota
+tools.network.cmd.windows="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
+tools.network.cmd.macosx=
+tools.network.path.macosx=
+tools.network.path.linux=
+tools.network.path.linux64=
+tools.network.path={runtime.tools.ameba_tools.path}
+tools.network.upload.params.quiet=
+tools.network.upload.pattern="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
+tools.network.upload.network_pattern="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
+tools.network.network_pattern.windows="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
+tools.network.network_pattern.macosx="{runtime.tools.ameba_tools.path}/upload_ota_mac" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}/ota.bin"
 
+tools.jlgdbota.upload.params.verbose=
+tools.jlgdbota.cmd=JLinkGDB_OTA
+tools.jlgdbota.cmd.windows=JLinkGDB_OTA.bat
+tools.jlgdbota.cmd.macosx=
+tools.jlgdbota.path.macosx=
+tools.jlgdbota.path.linux=
+tools.jlgdbota.path.linux64=
+tools.jlgdbota.path={runtime.tools.ameba_tools.path}
+tools.jlgdbota.upload.params.quiet=
+tools.jlgdbota.upload.pattern="{runtime.platform.path}/tools/JLinkGDB_OTA.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}\tools" "{runtime.tools.arm-none-eabi-gcc.path}\bin\"
 
-tools.jlink_upload.upload.params.verbose=
-tools.jlink_upload.cmd=jlink_upload
-tools.jlink_upload.cmd.windows=jlink_upload.bat
-tools.jlink_upload.cmd.macosx=
-tools.jlink_upload.path.macosx=
-tools.jlink_upload.path.linux=
-tools.jlink_upload.path.linux64=
-tools.jlink_upload.path={runtime.tools.ameba_tools.path}
-tools.jlink_upload.upload.params.quiet=
-tools.jlink_upload.upload.pattern="{runtime.platform.path}/tools/jlink_upload.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}/tools"
-tools.jlink_upload.upload.network_pattern="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
-tools.jlink_upload.network_pattern.windows="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
-tools.jlink_upload.network_pattern.macosx="{runtime.tools.ameba_tools.path}/upload_ota_mac" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}/ota.bin"
+tools.jlgdbimg.upload.params.verbose=
+tools.jlgdbimg.cmd=JLinkGDB_IMG
+tools.jlgdbimg.cmd.windows=JLinkGDB_IMG.bat
+tools.jlgdbimg.cmd.macosx=
+tools.jlgdbimg.path.macosx=
+tools.jlgdbimg.path.linux=
+tools.jlgdbimg.path.linux64=
+tools.jlgdbimg.path={runtime.tools.ameba_tools.path}
+tools.jlgdbimg.upload.params.quiet=
+tools.jlgdbimg.upload.pattern="{runtime.platform.path}/tools/JLinkGDB_IMG.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}\tools" "{runtime.tools.arm-none-eabi-gcc.path}\bin\"

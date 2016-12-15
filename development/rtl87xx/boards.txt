@@ -5,7 +5,7 @@ menu.upload_method=Upload method
 rtlmodule_rtl8710.name=RTL00 (RTL8710)
 rtlmodule_rtl8710.vid.0=0x2341
 rtlmodule_rtl8710.pid.0=0x003d
-rtlmodule_rtl8710.upload.tool=rtlmodule_tools
+rtlmodule_rtl8710.upload.tool=jlink
 #rtlmodule_rtl8710.upload.protocol=mbed_dap
 rtlmodule_rtl8710.upload.protocol=jlink
 rtlmodule_rtl8710.upload.maximum_size=372736
@@ -21,18 +21,27 @@ rtlmodule_rtl8710.build.extra_flags=-mthumb -DBOARD_RTL8710
 rtlmodule_rtl8710.build.ldscript=linker_scripts/gcc/rtl8710-symbol-v03-img2_arduino_arduino.ld
 rtlmodule_rtl8710.build.variant=rtl8710
 
-rtlmodule_rtl8710.menu.upload_method.jlinkMethod=JLink
-rtlmodule_rtl8710.menu.upload_method.jlinkMethod.upload.protocol=jlink
-rtlmodule_rtl8710.menu.upload_method.jlinkMethod.upload.tool=jlink_upload
+rtlmodule_rtl8710.menu.upload_method.jlinkram=JLink RAM
+rtlmodule_rtl8710.menu.upload_method.jlinkram.upload.protocol=jlink
+rtlmodule_rtl8710.menu.upload_method.jlinkram.upload.tool=jlink
 
-rtlmodule_rtl8710.menu.upload_method.NetworkMethod=Network
-rtlmodule_rtl8710.menu.upload_method.NetworkMethod.upload.protocol=Network
-rtlmodule_rtl8710.menu.upload_method.NetworkMethod.upload.tool=rtlmodule_tools
+rtlmodule_rtl8710.menu.upload_method.jlgdbimg=JLink IMG
+rtlmodule_rtl8710.menu.upload_method.jlgdbimg.upload.protocol=jlgdbimg
+rtlmodule_rtl8710.menu.upload_method.jlgdbimg.upload.tool=jlgdbimg
+
+rtlmodule_rtl8710.menu.upload_method.jlgdbota=JLink OTA
+rtlmodule_rtl8710.menu.upload_method.jlgdbota.upload.protocol=jlgdbota
+rtlmodule_rtl8710.menu.upload_method.jlgdbota.upload.tool=jlgdbota
+
+rtlmodule_rtl8710.menu.upload_method.networkota=Network OTA
+rtlmodule_rtl8710.menu.upload_method.networkota.upload.protocol=network
+rtlmodule_rtl8710.menu.upload_method.networkota.upload.tool=network
+
 
 rtlmodule_rtl8711am.name=F11AMIM13 (RTL8711AM)
 rtlmodule_rtl8711am.vid.0=0x2341
 rtlmodule_rtl8711am.pid.0=0x003d
-rtlmodule_rtl8711am.upload.tool=rtlmodule_tools
+rtlmodule_rtl8711am.upload.tool=jlink
 #rtlmodule_rtl8711am.upload.protocol=mbed_dap
 rtlmodule_rtl8711am.upload.protocol=jlink
 rtlmodule_rtl8711am.upload.maximum_size=2499639
@@ -47,3 +56,15 @@ rtlmodule_rtl8711am.build.core=arduino
 rtlmodule_rtl8711am.build.extra_flags=-mthumb -DBOARD_RTL8711AM
 rtlmodule_rtl8711am.build.ldscript=linker_scripts/gcc/rtl8711am-symbol-v03-img2_arduino_arduino.ld
 rtlmodule_rtl8711am.build.variant=rtl8711am
+
+rtlmodule_rtl8711am.menu.upload_method.jlinkMethod=JLinkRAM
+rtlmodule_rtl8711am.menu.upload_method.jlinkMethod.upload.protocol=jlink
+rtlmodule_rtl8711am.menu.upload_method.jlinkMethod.upload.tool=jlink
+
+rtlmodule_rtl8711am.menu.upload_method.jlinkMethod=JLinkGDB
+rtlmodule_rtl8711am.menu.upload_method.jlinkMethod.upload.protocol=jlgdb
+rtlmodule_rtl8711am.menu.upload_method.jlinkMethod.upload.tool=jlgdb
+
+rtlmodule_rtl8711am.menu.upload_method.NetworkMethod=Network OTA
+rtlmodule_rtl8711am.menu.upload_method.NetworkMethod.upload.protocol=network
+rtlmodule_rtl8711am.menu.upload_method.NetworkMethod.upload.tool=network

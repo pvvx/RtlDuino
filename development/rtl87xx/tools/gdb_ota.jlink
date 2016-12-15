@@ -1,0 +1,334 @@
+####################################
+# J-LINK GDB SERVER initialization #
+####################################
+define InitJlink
+printf "Jlink Init:\n"
+set verbose off
+set complaints 0
+set confirm off
+set exec-done-display off
+show exec-done-display
+set trace-commands off
+#set debug aix-thread off
+#set debug dwarf2-die 0
+set debug displaced off 
+set debug expression 0
+set debug frame 0
+set debug infrun 0
+set debug observer 0
+set debug overload 0
+#set debugvarobj 0
+set pagination off
+set print address off
+set print symbol-filename off
+set print symbol off
+set print pretty off
+set print object off
+#set debug notification off
+set debug parser off
+set debug remote 0
+target remote localhost:2331
+set remotetimeout 10000
+monitor device Cortex-M3
+monitor endian little
+monitor reset
+# Set max speed
+monitor speed 4000
+set mem inaccessible-by-default off
+# Setup GDB FOR FASTER DOWNLOADS
+set remote memory-write-packet-size 8192
+set remote memory-write-packet-size fixed
+end
+#############
+# Boot_Flash
+define SetBootFlash
+printf "SetBoot = Flash:\n"
+monitor long 0x40000210 = 0x211157
+end
+# Boot RAM start_addr0() Run if ( v400001F4 & 0x8000000 ) && ( v40000210 & 0x80000000 ) 
+define SetBootCall0
+printf "SetBoot = Call0:\n"
+monitor long 0x40000210 = 0x80011117
+end
+# Boot RAM start_addr1() Run if ( v40000210 & 0x20000000 ) 
+define SetBootCall1
+printf "SetBoot = Call1:\n"
+monitor long 0x40000210 = 0x20011117
+end
+# Boot RAM start_addr2() Run if ( v40000210 & 0x10000000 )
+define SetBootCall2
+printf "SetBoot = Call2:\n"
+monitor long 0x40000210 = 0x10011117
+end
+# Boot RAM start_addr3() Run if ( v400001F4 & 0x8000000 ) && ( v40000210 & 0x8000000 )
+define SetBootCall3
+printf "SetBoot = Call3:\n"
+monitor long 0x40000210 = 0x8011117
+end
+# Boot RAM start_addr4() Init console, Run if ( v40000210 & 0x4000000 )
+define SetBootCall4
+printf "SetBoot = Call4:\n"
+monitor long 0x40000210 = 0x4011117
+end
+# CPU CLK 166 MHz?
+define SetClk166MHz
+printf "SetCLK 166.66MHz:\n"
+monitor long 0x40000014 = 0x00000011 
+end
+# CPU CLK 83 MHz?
+define SetClk83MHz
+printf "SetCLK 83.33MHz:\n"
+monitor long 0x40000014 = 0x00000021 
+end
+###############
+# System Init #
+###############
+define SystemInit
+printf "System Init:\n"
+monitor long 0x40000304 = 0x1FC00002
+monitor long 0x40000250 = 0x400
+monitor long 0x40000340 = 0x0
+monitor long 0x40000230 = 0xdcc4
+monitor long 0x40000210 = 0x11117
+monitor long 0x40000210 = 0x11157
+monitor long 0x400002c0 = 0x110011
+monitor long 0x40000320 = 0xffffffff
+end
+############
+# SPI Init #
+############
+define SPI_Init
+printf "Init SPI:\n"
+#enable spi flash peripheral clock
+set $Temp = {int}(0x40000230)
+set $Temp = ($Temp | 0x300)
+set {int}(0x40000230) = $Temp
+#enable spi flash peripheral
+set $Temp = {int}(0x40000210)
+set $Temp = ($Temp | 0x10)
+set {int}(0x40000210) = $Temp
+#select spi flash pinout (0 - internal), enable spi flash pins 
+set $Temp = {int}(0x400002C0)
+set $Temp = (($Temp & 0xFFFFFFF8) | 1)
+set {int}(0x400002C0) = $Temp
+#disable SPI FLASH operation
+monitor long 0x40006008 = 0
+#disable all interrupts
+monitor long 0x4000602C = 0
+#use first "slave select" pin
+monitor long 0x40006010 = 1
+#baud rate, default value
+monitor long 0x40006014 = 2
+#tx fifo threshold
+monitor long 0x40006018 = 0
+#rx fifo threshold
+monitor long 0x4000601C = 0
+#disable DMA
+monitor long 0x4000604C = 0
+set $SPI_FLASH_BASE = 0x98000000
+end
+###################
+# GetOtaSize #
+###################
+define GetOtaSize
+set $rambuffer = 0x10000300
+printf "Get ImagesSize:\n"
+set $ImageOtaSize = 0
+restore $arg0 binary $rambuffer 0 4
+set $ImageAddSize = {int}($rambuffer+0)
+if $ImageAddSize != 0 
+ printf "Image2Size = %d\n", $ImageAddSize
+ set $ImageOtaSize = $ImageOtaSize + $ImageAddSize + 16
+ set $parms1 = $rambuffer - $ImageOtaSize
+ set $parms3 = $ImageOtaSize + 4
+ restore $arg0 binary $parms1 $ImageOtaSize $parms3
+ set $ImageAddSize = {int}($rambuffer+0)
+ printf "ImageSdramSize = %d\n", $ImageAddSize
+ set $ImageOtaSize = $ImageOtaSize + $ImageAddSize + 20
+else  
+ printf "Image2Size = %d !\n", $ImageOtaSize
+end
+end
+#####################
+# Flash Images Info #
+#####################
+define FlashImagesInfo
+printf "Flash Info:\n"
+set $Image1Size = {int}($SPI_FLASH_BASE + 0x10) + 32
+set $Image1LoadAddr = {int}($SPI_FLASH_BASE + 0x14)
+if $Image1LoadAddr == 0xFFFFFFFF
+printf "Image1 - None\n"
+else
+set $Image2FlashAddr = {short}($SPI_FLASH_BASE + 0x18) * 1024
+if $Image2FlashAddr == 0 
+$Image2FlashAddr = $Image1Size 
+end 
+set $Image2Size = {int}($Image2FlashAddr + $SPI_FLASH_BASE)
+set $Image2LoadAddr = {int}($Image2FlashAddr + $SPI_FLASH_BASE + 0x4)
+printf "Image1Size = %d\n", $Image1Size
+printf "Image1LoadAddr = 0x%08x\n", $Image1LoadAddr
+printf "Image2FlashAddr = 0x%08x\n", $Image2FlashAddr
+if $Image2Size != 0xFFFFFFFF
+printf "Image2Size = %d\n", $Image2Size
+printf "Image2LoadAddr = 0x%08x\n", $Image2LoadAddr
+else
+printf "Image2 - None\n"
+end
+end
+end
+###############
+# FlasherInit #
+###############
+define FlasherInit
+set $rtl8710_flasher_capacity = 0
+set $rtl8710_flasher_auto_erase = 1
+set $rtl8710_flasher_auto_verify = 1
+set $rtl8710_flasher_firmware_ptr = 0x10001000
+set $rtl8710_flasher_buffer = 0x10008000
+#262144
+set $rtl8710_flasher_buffer_size = 421888
+set $rtl8710_flasher_sector_size = 4096
+set $rtl8710_flasher_auto_erase_sector = 0xFFFFFFFF
+end
+###############
+# FlasherWait #
+###############
+define FlasherWait
+set $fresult = {int}($rtl8710_flasher_buffer)
+while ($fresult != 0)
+set $fresult = {int}($rtl8710_flasher_buffer)
+end
+end
+###############
+# FlasherLoad #
+###############
+define FlasherLoad
+if $rtl8710_flasher_capacity == 0
+ printf "initializing RTL8710 flasher\n"
+ restore $arg0 binary $rtl8710_flasher_firmware_ptr 0 968
+ monitor reset
+ set $pc = $rtl8710_flasher_firmware_ptr
+ set $sp = 0x1ffffffc
+ set {int}($rtl8710_flasher_buffer + 0x08) = 0
+ set {int}($rtl8710_flasher_buffer + 0x00) = 1
+ #continue
+ monitor go
+ FlasherWait
+ set $id = {int}($rtl8710_flasher_buffer + 0x0C)
+ if ($id == 0x1420c2) 
+  set $rtl8710_flasher_capacity = 1 << (($id >> 16) & 0x0ff)
+  printf "Flash ID = 0x%08x : MX25L8006E (%d kbytes)\n", $id, $rtl8710_flasher_capacity>>10
+ else 
+  set $rtl8710_flasher_capacity = 1024*1024)
+  error "Flash ID = 0x%08x : ?\n", $id
+ end
+ printf "RTL8710 flasher initialized\n"
+else
+printf "reinitializing RTL8710 flasher\n"
+end
+end
+##################
+# FlasherWrBlock #
+##################
+define FlasherWrBlock
+#printf "FlashWrBlock 0x%08x, 0x%08x\n", $arg0, $arg1 
+set {int}($rtl8710_flasher_buffer + 0x04) = 4
+set {int}($rtl8710_flasher_buffer + 0x08) = 0
+set {int}($rtl8710_flasher_buffer + 0x10) = $arg0
+set {int}($rtl8710_flasher_buffer + 0x14) = $arg1
+set {int}($rtl8710_flasher_buffer + 0x00) = 1
+FlasherWait
+set $status = {int}($rtl8710_flasher_buffer + 0x08)
+if $status > 0
+ error "write error, offset 0x%08x", $arg0
+end
+end
+##################
+# FlasherVrBlock #
+##################
+define FlasherVrBlock
+#printf "FlashVrBlock 0x%08x, 0x%08x\n", $arg0, $arg1 
+set {int}($rtl8710_flasher_buffer + 0x04) = 5
+set {int}($rtl8710_flasher_buffer + 0x08) = 0
+set {int}($rtl8710_flasher_buffer + 0x10) = $arg0
+set {int}($rtl8710_flasher_buffer + 0x14) = $arg1
+set {int}($rtl8710_flasher_buffer + 0x00) = 1
+FlasherWait
+set $status = {int}($rtl8710_flasher_buffer + 0x08)
+if $status > 0
+ set $status = {int}($rtl8710_flasher_buffer + 0x0C)
+ set $status = {int}($status + $arg0)
+ error "verify error, offset 0x%08x", $status
+end
+end
+#################
+# FlashSecErase #
+#################
+define FlashSecErase
+#printf "FlashSecErase 0x%08x, 0x%08x\n", $rtl8710_flasher_buffer, $arg0
+set {int}($rtl8710_flasher_buffer + 0x04) = 2
+set {int}($rtl8710_flasher_buffer + 0x08) = 0
+set {int}($rtl8710_flasher_buffer + 0x10) = $arg0
+set {int}($rtl8710_flasher_buffer + 0x00) = 1
+FlasherWait
+end
+################
+# FlasherWrite #
+################
+define FlasherWrite
+set $sector = 0
+set $offset = 0
+set $size = $arg2
+while $offset < $size
+ set $len = $size - $offset
+ if $len > $rtl8710_flasher_buffer_size
+  set $len = $rtl8710_flasher_buffer_size
+ end
+ set $flash_offset = $arg1 + $offset
+ printf "write offset 0x%08x\n", $flash_offset
+ set $parms1 = $rtl8710_flasher_buffer + 0x20 - $offset 
+ set $parms2 = $offset 
+ set $parms3 = $offset + $len 
+ restore $arg0 binary $parms1 $parms2 $parms3
+ if $rtl8710_flasher_auto_erase != 0
+  set $count_i = $flash_offset
+  while $count_i < ($flash_offset + $len)
+   set $sector = $count_i/$rtl8710_flasher_sector_size
+   if $rtl8710_flasher_auto_erase_sector != $sector
+	set $parms1 = $sector * $rtl8710_flasher_sector_size
+    printf "erase sector %d at 0x%08x\n", $sector, $parms1 
+    FlashSecErase $parms1
+    set $rtl8710_flasher_auto_erase_sector = $sector
+   end
+   set $count_i = $count_i + 1
+  end
+ end
+ FlasherWrBlock $flash_offset $len
+ printf "write %d bytes at 0x%08x\n", $len, $flash_offset
+ if $rtl8710_flasher_auto_verify != 0
+  printf "verify offset 0x%08x len %d\n", $flash_offset, $len
+  FlasherVrBlock $flash_offset $len
+ end
+ set $offset = $offset + $rtl8710_flasher_buffer_size
+end
+end
+#########################################
+InitJlink
+SystemInit
+SetClk166MHz
+SPI_Init
+GetOtaSize ota.bin
+if $ImageOtaSize != 0
+ FlasherInit
+ FlasherLoad rtl8710_flasher.bin
+ FlasherWrite ota.bin 0x80000 $ImageOtaSize
+ set $parms1 = $rtl8710_flasher_buffer + 0x20
+ restore ota.bin binary $parms1 0 0x1000
+ set {int}($rtl8710_flasher_buffer + 0x28) = 0x35393138
+ set {int}($rtl8710_flasher_buffer + 0x2C) = 0x31313738
+ FlasherWrBlock 0x80000 0x10
+end
+monitor reset
+SetBootFlash
+monitor go
+quit
