@@ -21,11 +21,13 @@
 #include <debug.h>
 #include <Arduino.h>
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
 #include <diag.h>
+#include <flash_api.h>
 
 extern void *pvPortMalloc( size_t xWantedSize );
 extern void vPortFree( void *pv );
@@ -38,8 +40,6 @@ extern void *tcm_heap_calloc(int size);
 extern void tcm_heap_free(void * mem);
 extern void tcm_heap_dump(void);
 extern int tcm_heap_freeSpace(void);
-
-extern unsigned int HalGetCpuClk(void);
 
 /*
 __attribute__((noreturn)) void __panic_func(const char* file, int line, const char* func)
@@ -78,6 +78,24 @@ void sys_info(void) {
 	rtl_printf("\r\nCLK CPU\t\t%d Hz\r\nRAM heap\t%d bytes\r\nTCM heap\t%d bytes\r\n",
 				HalGetCpuClk(), xPortGetFreeHeapSize(), tcm_heap_freeSpace());
 }				
+
+unsigned int GetFlashSize(void)
+{
+	unsigned int FlashSize;
+	if(!fspic_isinit) flash_get_status(&flashobj);
+	if(flashobj.SpicInitPara.id[3] >= 0x14 && flashobj.SpicInitPara.id[0] <= 0x19) {
+		FlashSize = 1<<(flashobj.SpicInitPara.id[2]); // Flash size in bytes
+	}
+	else FlashSize = 1024*1024;  // 1 mbytes
+	return FlashSize;
+}
+
+unsigned int GetFlashId(void)
+{
+	if(!fspic_isinit) flash_get_status(&flashobj);
+	return (flashobj.SpicInitPara.id[0]<<16) | (flashobj.SpicInitPara.id[1]<<8) | flashobj.SpicInitPara.id[2];
+}
+
 
 void * malloc(size_t size)
 {

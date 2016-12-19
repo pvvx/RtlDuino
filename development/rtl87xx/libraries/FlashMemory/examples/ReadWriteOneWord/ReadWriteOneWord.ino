@@ -1,15 +1,13 @@
-/*
- This sketch shows how to request flash memory larger than defaut 4K, and read/write one specific word.
- */
-
 #include <FlashMemory.h>
 
 void setup() {
   unsigned int value;
-  /* request flash size 0x4000 from 0xFC000 */
-  FlashMemory.begin(0xFC000, 0x4000);
+  printf("\nChipID: 0x%02X, CLK: %d Hz\n", HalGetChipId(), HalGetCpuClk());
+  printf("FlashID: 0x%06X, FlashSize: %d bytes\n", GetFlashId(), GetFlashSize());
+  /* request flash size 0x4000 from 0x7C000 */
+  FlashMemory.begin(0x7C000, 0x4000);
 
-  /* read one word (32-bit) from 0xFC000 plus offset 0x3F00 */
+  /* read one word (32-bit) from 0x7C000 plus offset 0x3F00 */
   value = FlashMemory.readWord(0x3F00);
 
   printf("value is 0x%08X\r\n", value);
@@ -20,7 +18,7 @@ void setup() {
     value++;
   }
 
-  /* write one word (32-bit) to 0xFC000 plus offset 0x3F00 */
+  /* write one word (32-bit) to 0x7C000 plus offset 0x3F00 */
   FlashMemory.writeWord(0x3F00, value);
 }
 

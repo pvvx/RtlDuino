@@ -18,8 +18,6 @@
 #define CHIP_ID_8710AF      0xFC
 #define CHIP_ID_8711AN      0xFB
 #define CHIP_ID_8710AM      0xFA
-#define CHIP_ID_SIP         0xF9  
-#define CHIP_ID_COMBO_SIP   0xF8
 
 enum _HAL_RESET_REASON{
 	REASON_DEFAULT_RST = 0,         /**< normal startup by power on */
@@ -36,8 +34,9 @@ typedef u32 HAL_RESET_REASON;
 extern _LONG_CALL_ u32 HalDelayUs(u32 us);
 #endif
 
-extern _LONG_CALL_ u32 HalGetCpuClk(VOID);
+extern _LONG_CALL_ unsigned int HalGetCpuClk(VOID);
 extern _LONG_CALL_ u8 HalGetRomInfo(VOID);
+extern u8 HalGetChipId(void);
 
 extern _LONG_CALL_ROM_ void *_memset( void *s, int c, SIZE_T n );
 extern _LONG_CALL_ROM_ void *_memcpy( void *s1, const void *s2, SIZE_T n );

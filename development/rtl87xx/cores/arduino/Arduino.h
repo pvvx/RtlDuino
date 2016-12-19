@@ -40,10 +40,14 @@ extern uint32_t SystemCoreClock;
 #define microsecondsToClockCycles(a) ( (a) * (SystemCoreClock / 1000000L) )
 
 extern void sys_info(void);
-extern unsigned char HalGetChipId(void);
+/* HalGetChipId:
+ * 0xff - RTL8711AM, 0xfe - RTL8195AM, 0xfd - RTL8711AF, 
+ * 0xfc - RTL8710AF, 0xfb - RTL8711AN, 0xfa - RTL8710AM */
+extern unsigned char HalGetChipId(void); 
+extern unsigned int HalGetCpuClk(void);
+
 extern void wait_us(int us);
 #define delay_us	wait_us
-
 
 extern void yield(void);
 
@@ -148,6 +152,12 @@ extern void free(void *pv);
 extern void * realloc(void *pv, size_t size);
 extern void hexdump(void * ptr, int cnt);
 extern void debug_on(void);
+
+extern unsigned int GetFlashSize(void); // default 1048576 bytes (1 Mbytes)
+/* FlashID: manufacturer ID : memory type : memory density
+  0xC22015 - MXIC MX25L1606E, F11AMIM13 (RTL8711AM) module, 
+  0xC22014 - MXIC MX25L8006E, RTL00 (RTL8710AF) module */
+extern unsigned int GetFlashId(void); 
 
 // C++ functions
 #ifdef __cplusplus

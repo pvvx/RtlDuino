@@ -11,7 +11,7 @@ extern "C" {
 }
 #endif
 
-flash_t flash_obj;
+//flash_t flash_obj;
 
 FlashMemoryClass::FlashMemoryClass(unsigned int _base_address, unsigned int _buf_size) {
     base_address = _base_address;
@@ -19,7 +19,7 @@ FlashMemoryClass::FlashMemoryClass(unsigned int _base_address, unsigned int _buf
 
     buf = (unsigned char *) malloc ( FLASH_SECTOR_SIZE );
 
-    pFlash = (void *)(&flash_obj);
+    pFlash = (void *)(&flashobj);
 }
 
 FlashMemoryClass::~FlashMemoryClass() {

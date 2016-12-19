@@ -7,7 +7,7 @@
  * This is reference flash address that user can use.
  * If user use flash address overwirte image address, the it would corrupt image content.
  **/
-#define FLASH_MEMORY_APP_BASE 0xFF000
+#define FLASH_MEMORY_APP_BASE 0xFD000
 
 /** 
  * @class FlashMemoryClass FlashMemory.h 
