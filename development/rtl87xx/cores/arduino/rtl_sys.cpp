@@ -25,6 +25,8 @@
 extern "C" {
 #endif // __cplusplus
 
+#include <diag.h>
+
 extern void *pvPortMalloc( size_t xWantedSize );
 extern void vPortFree( void *pv );
 extern void *pvPortReAlloc( void *pv,  size_t xWantedSize );
@@ -60,6 +62,16 @@ void hexdump(void * ptr, int cnt)
 		c -= 64;
 	} 
 	if(c != 0) DumpForOneBytes((void *)p, c);
+}
+
+void debug_on(void)
+{
+	 ConfigDebugErr  = -1;
+	 ConfigDebugInfo = -1;
+	 ConfigDebugWarn = -1;
+	 CfgSysDebugErr = -1;
+	 CfgSysDebugInfo = -1;
+	 CfgSysDebugWarn = -1;
 }
 
 void sys_info(void) {

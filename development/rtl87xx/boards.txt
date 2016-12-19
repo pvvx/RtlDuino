@@ -57,14 +57,14 @@ rtlmodule_rtl8711am.build.extra_flags=-mthumb -DBOARD_RTL8711AM
 rtlmodule_rtl8711am.build.ldscript=linker_scripts/gcc/rtl8711am-symbol-v03-img2_arduino_arduino.ld
 rtlmodule_rtl8711am.build.variant=rtl8711am
 
-rtlmodule_rtl8711am.menu.upload_method.jlinkMethod=JLinkRAM
-rtlmodule_rtl8711am.menu.upload_method.jlinkMethod.upload.protocol=jlink
-rtlmodule_rtl8711am.menu.upload_method.jlinkMethod.upload.tool=jlink
+rtlmodule_rtl8711am.menu.upload_method.jlgdbimg=JLink IMG
+rtlmodule_rtl8711am.menu.upload_method.jlgdbimg.upload.protocol=jlgdbimg
+rtlmodule_rtl8711am.menu.upload_method.jlgdbimg.upload.tool=jlgdbimg
 
-rtlmodule_rtl8711am.menu.upload_method.jlinkMethod=JLinkGDB
-rtlmodule_rtl8711am.menu.upload_method.jlinkMethod.upload.protocol=jlgdb
-rtlmodule_rtl8711am.menu.upload_method.jlinkMethod.upload.tool=jlgdb
+rtlmodule_rtl8711am.menu.upload_method.jlgdbota=JLink OTA
+rtlmodule_rtl8711am.menu.upload_method.jlgdbota.upload.protocol=jlgdbota
+rtlmodule_rtl8711am.menu.upload_method.jlgdbota.upload.tool=jlgdbota
 
-rtlmodule_rtl8711am.menu.upload_method.NetworkMethod=Network OTA
-rtlmodule_rtl8711am.menu.upload_method.NetworkMethod.upload.protocol=network
-rtlmodule_rtl8711am.menu.upload_method.NetworkMethod.upload.tool=network
+rtlmodule_rtl8711am.menu.upload_method.networkota=Network OTA
+rtlmodule_rtl8711am.menu.upload_method.networkota.upload.protocol=network
+rtlmodule_rtl8711am.menu.upload_method.networkota.upload.tool=network

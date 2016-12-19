@@ -40,6 +40,10 @@ extern uint32_t SystemCoreClock;
 #define microsecondsToClockCycles(a) ( (a) * (SystemCoreClock / 1000000L) )
 
 extern void sys_info(void);
+extern unsigned char HalGetChipId(void);
+extern void wait_us(int us);
+#define delay_us	wait_us
+
 
 extern void yield(void);
 
@@ -49,10 +53,10 @@ extern int rtl_printf(const char *fmt, ...);
 extern int rtl_sprintf(char* str, const char* fmt, ...);
 
 #ifndef printf
-#define printf                  	rtl_printf
+#define printf		rtl_printf
 #endif
 #ifndef sprintf
-#define sprintf						rtl_sprintf
+#define sprintf		rtl_sprintf
 #endif
 
 /*
@@ -139,11 +143,11 @@ extern PinDescription g_APinDescription[];
 
 extern void * malloc(size_t size);
 extern void * zalloc(size_t size);
-extern void *calloc(size_t count, size_t size);
+extern void * calloc(size_t count, size_t size);
 extern void free(void *pv);
 extern void * realloc(void *pv, size_t size);
-
 extern void hexdump(void * ptr, int cnt);
+extern void debug_on(void);
 
 // C++ functions
 #ifdef __cplusplus

@@ -23,7 +23,7 @@
 #include <string.h>
 #include "LOGUARTClass.h"
 
-#define LOG_UART_MODIFIABLE_BAUD_RATE 0
+#define LOG_UART_MODIFIABLE_BAUD_RATE 1
 
 #ifdef __cplusplus
 extern "C" {
