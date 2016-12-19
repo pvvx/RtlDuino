@@ -8,6 +8,7 @@ class WiFiClient : public Client {
 
 public:
 	
+  ~WiFiClient();
   WiFiClient();
   WiFiClient(uint8_t sock);
 

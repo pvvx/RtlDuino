@@ -13,11 +13,13 @@ private:
 	ServerDrv serverfd;
 
 public:
+	~WiFiServer();
   	WiFiServer(uint16_t);
 
   	WiFiClient available(uint8_t* status = NULL);
 
   	void begin();
+  	void stop();
   	virtual size_t write(uint8_t b);
   	virtual size_t write(const uint8_t *buf, size_t size);
   	//uint8_t status();

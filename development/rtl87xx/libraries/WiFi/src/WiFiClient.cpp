@@ -11,10 +11,16 @@ extern "C" {
 #include "WiFiServer.h"
 #include "server_drv.h"
 
+WiFiClient::~WiFiClient() {
+		stop();
+}
+
+
 WiFiClient::WiFiClient() : _sock(MAX_SOCK_NUM) {
     _is_connected = false;
     recvTimeout = 3000;
 }
+
 
 WiFiClient::WiFiClient(uint8_t sock) {
     _sock = sock;
@@ -98,9 +104,8 @@ int WiFiClient::read(uint8_t* buf, size_t size) {
 
 void WiFiClient::stop() {
 
-  	if (_sock < 0)
-    	return;
-
+  	if (_sock < 0) 	return;
+  	
   	clientdrv.stopClient(_sock);
 	_is_connected = false;
 	

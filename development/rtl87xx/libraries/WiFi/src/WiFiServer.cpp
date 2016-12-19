@@ -23,6 +23,11 @@
 #include "WiFiClient.h"
 #include "WiFiServer.h"
 
+WiFiServer::~WiFiServer()
+{
+    stop();
+}
+
 WiFiServer::WiFiServer(uint16_t port)
 {
     _port = port;
@@ -31,6 +36,14 @@ WiFiServer::WiFiServer(uint16_t port)
 void WiFiServer::begin()
 {
     _sock_ser = serverfd.startServer(_port);
+}
+
+void WiFiServer::stop()
+{
+    if(_sock_ser >= 0) {
+    	serverfd.stopClient(_sock_ser);
+    	_sock_ser = -1;
+    }
 }
 
 WiFiClient WiFiServer::available(uint8_t* status)
@@ -66,6 +79,7 @@ size_t WiFiServer::write(const uint8_t *buf, size_t size) {
 
     return size;
 }
+
 #if 0
 uint8_t WiFiServer::status() {
     return ServerDrv::getServerState(0);
