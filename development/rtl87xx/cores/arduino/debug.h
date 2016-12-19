@@ -21,7 +21,8 @@ void hexdump(void * addr, int len);
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+void print_udp_pcb(void);
+void print_tcp_pcb(void);
 void DumpForOneBytes(void *addr, int cnt); // cnt max 0x70 !
 /*
 void __panic_func(const char* file, int line, const char* func) __attribute__((noreturn));
