@@ -27,6 +27,7 @@ extern "C" {
 	#include "wl_types.h"
 }
 
+#include "netbios.h"
 #include "IPAddress.h"
 #include "WiFiClient.h"
 #include "WiFiServer.h"
