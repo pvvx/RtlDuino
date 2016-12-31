@@ -8,7 +8,7 @@ int status = WL_IDLE_STATUS;
 WiFiServer server(80);
 
 void setup() {
-  Serial.begin(9600);      // initialize serial communication
+  Serial.begin(38400);      // initialize serial communication
   pinMode(13, OUTPUT);      // set the LED pin mode
   // check for the presence of the shield:
   if (WiFi.status() == WL_NO_SHIELD) {

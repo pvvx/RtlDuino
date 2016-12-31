@@ -11,7 +11,7 @@ char server[] = "www.google.com";    // name address for Google (using DNS)
 WiFiClient client;
 void setup() {
   //Initialize serial and wait for port to open:
-  Serial.begin(9600);
+  Serial.begin(38400);
   while (!Serial) {
     ;
   }

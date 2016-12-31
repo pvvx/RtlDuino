@@ -55,7 +55,7 @@ XivelyClient xivelyclient(client);
 
 void setup() {
   Serial.begin(57600);
-  mySerial.begin(9600); // PMS 3003 UART has baud rate 9600
+  mySerial.begin(38400); // PMS 3003 UART has baud rate 9600
 
 /***************************************Connect to Wifi network***************************************/
   while ( status != WL_CONNECTED) { 

@@ -26,7 +26,7 @@ XivelyClient xivelyclient(client);
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(38400);
   
   Serial.println("Reading from Xively example");
   Serial.println();

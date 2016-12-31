@@ -24,7 +24,7 @@ extern "C" unsigned int mfl_code_to_length[]; // mfl_code_to_length[0] = SSL_MAX
 void setup() {
   mfl_code_to_length[0] = 16384; // = max SSL_MAX_CONTENT_LEN
   //Initialize serial and wait for port to open:
-  Serial.begin(9600);
+  Serial.begin(38400);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }

@@ -16,7 +16,7 @@ const int trigger_pin = 12;
 const int echo_pin    = 13;
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(38400);
     pinMode(trigger_pin, OUTPUT);
     pinMode(echo_pin, INPUT);
 }
