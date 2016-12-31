@@ -41,13 +41,13 @@ extern void tcm_heap_free(void * mem);
 extern void tcm_heap_dump(void);
 extern int tcm_heap_freeSpace(void);
 
-/*
+
 __attribute__((noreturn)) void __panic_func(const char* file, int line, const char* func)
 {
 	DiagPrintf("\r\nPanic: %s, line: %d, %s\r\n");
 	while(1);	
 }
-*/
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

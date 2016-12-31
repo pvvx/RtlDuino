@@ -24,10 +24,10 @@ extern "C" {
 void print_udp_pcb(void);
 void print_tcp_pcb(void);
 void DumpForOneBytes(void *addr, int cnt); // cnt max 0x70 !
-/*
+
 void __panic_func(const char* file, int line, const char* func) __attribute__((noreturn));
 #define panic() __panic_func(__FILE__, __LINE__, __func__)
-*/
+
 #ifdef __cplusplus
 }
 #endif
