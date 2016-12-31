@@ -25,7 +25,7 @@ void setup()
 
   printf("======================\n");
 
-  if (tmp) {
+  if (!tmp) {
     printf("Open file...\n");
     tmp = SPIFFS.open("/tmp.txt", "w");
     printf("Write data...\n");
