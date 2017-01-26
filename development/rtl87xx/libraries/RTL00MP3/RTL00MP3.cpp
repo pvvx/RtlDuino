@@ -11,7 +11,7 @@
 #error "Only RTL8710 and RTL8711AM!"
 #endif
 
-#include "arduino.h"
+#include "Arduino.h"
 #include "RTL00MP3.h"
 
 #ifdef __cplusplus
