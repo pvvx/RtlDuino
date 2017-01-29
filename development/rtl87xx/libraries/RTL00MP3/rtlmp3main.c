@@ -122,9 +122,9 @@ static enum mad_flow input(struct mad_stream *stream) {
 			bufUnderrunCt++;
 			// We both silence the output as well as wait a while by pushing silent samples into the i2s system.
 			// This waits for about 200mS
-#if DEBUG_MAIN_LEVEL > 1
-			DBG_8195A("FIFO: Buffer Underrun\n");
-#endif
+//#if DEBUG_MAIN_LEVEL > 1
+//			DBG_8195A("FIFO: Buffer Underrun\n");
+//#endif
 			for (n = 0; n < 441*2; n++)	sampToOut(0);
 		} else {
 			//Read some bytes from the FIFO to re-fill the buffer.
