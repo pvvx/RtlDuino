@@ -722,6 +722,11 @@ SECTIONS
     SSI_DBG_CONFIG = 0x10000350;
     _pHAL_Gpio_Adapter = 0x10000354;
     Timer2To7VectorTable = 0x10000358;
+	_rand_first = 0x10000370;
+	_rand_z1 = 0x10000374;
+	_rand_z2 = 0x10000378;
+	_rand_z3 = 0x1000037C;
+	_rand_z4 = 0x10000380;
     pUartLogCtl = 0x10000384;
     UartLogBuf = 0x10000388;
     UartLogCtl = 0x10000408;

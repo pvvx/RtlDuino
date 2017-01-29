@@ -24,6 +24,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+extern void HalCpuClkConfig(u8  CpuType);
+extern void SystemCoreClockUpdate(void);
+extern void En32KCalibration(void);
+
+#include "FreeRTOS.h"
+#include "task.h"
+#include "diag.h"
+#include "rtl8195a.h"
 extern int tcm_heap_freeSpace(void);
 extern void console_init(void);
 
@@ -33,23 +41,50 @@ osThreadId main_tid = 0;
 // May be redefined by variant files.
 void initVariant() __attribute__((weak));
 void initVariant() { }
+
 /*
-void set_cpu_clk166mhz(void)
+ * \brief User PreInit of Arduino application
+ */
+void UserPreInit(void) __attribute__((weak));
+void UserPreInit(void) { }
+
+
+/*
+ * \brief Init Random()
+ * \note Use in void __low_level_init(void) { Init_Rand(); } !
+ */
+void Init_Rand(void)
 {
-	HalCpuClkConfig(0); // 0 - 166666666 Hz, 1 - 83333333 Hz, 2 - 41666666 Hz, 3 - 20833333 Hz, 4 - 10416666 Hz, 5 - 4000000 Hz
-	HAL_LOG_UART_ADAPTER pUartAdapter;
-	pUartAdapter.BaudRate = RUART_BAUD_RATE_38400;
-	HalLogUartSetBaudRate(&pUartAdapter);
-	SystemCoreClockUpdate();
-	En32KCalibration();
+	extern u32 _rand_z1, _rand_z2, _rand_z3, _rand_z4, _rand_first;
+	u32 *p = (u32 *)0x1FFFFF00;
+	while(p < (u32 *)0x20000000) _rand_z1 ^= *p++;
+	_rand_z1 ^= (*((u32 *)0x40002018) << 24) ^ (*((u32 *)0x40002118) << 16) ^ (*((u32 *)0x40002218) << 8) ^ *((u32 *)0x40002318);
+	_rand_z2 = ((_rand_z1 & 0x007F00FF) << 7) ^	((_rand_z1 & 0x0F80FF00) >> 8);
+	_rand_z3 = ((_rand_z2 & 0x007F00FF) << 7) ^	((_rand_z2 & 0x0F80FF00) >> 8);
+	_rand_z4 = ((_rand_z3 & 0x007F00FF) << 7) ^	((_rand_z3 & 0x0F80FF00) >> 8);
+	_rand_first = 1;
 }
-*/
+
+/*
+ * \brief Set CPU CLK 166MHz
+ * clk : 0 - 166666666 Hz, 1 - 83333333 Hz, 2 - 41666666 Hz, 3 - 20833333 Hz, 4 - 10416666 Hz, 5 - 4000000 Hz
+ * baud: 38400,...
+ */
+void Init_CPU_CLK_UART(int clkn, int baud)
+{
+//	if(HalGetCpuClk() < 166000000)
+	 	HalCpuClkConfig(clkn);
+		HAL_LOG_UART_ADAPTER pUartAdapter;
+		pUartAdapter.BaudRate = baud;
+		HalLogUartSetBaudRate(&pUartAdapter);
+		SystemCoreClockUpdate();
+		En32KCalibration();
+}
 /*
  * \brief handle sketch
  */
 void main_task( void const *arg )
 {
-//    delay(1);
 
     setup();
 
@@ -69,12 +104,13 @@ void main_task( void const *arg )
     }
 }
 
+
 /*
  * \brief Main entry point of Arduino application
  */
 int main( void )
 {
-//	set_cpu_clk166mhz();
+	UserPreInit();
 	
     init();
 

@@ -39,6 +39,12 @@ extern uint32_t SystemCoreClock;
 #define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (SystemCoreClock / 1000L) )
 #define microsecondsToClockCycles(a) ( (a) * (SystemCoreClock / 1000000L) )
 
+/*
+ * \brief Set CPU CLK 166MHz
+ * clk : 0 - 166666666 Hz, 1 - 83333333 Hz, 2 - 41666666 Hz, 3 - 20833333 Hz, 4 - 10416666 Hz, 5 - 4000000 Hz
+ * baud: 38400,...
+ */
+extern void Init_CPU_CLK_UART(int clkn, int baud);
 extern void sys_info(void);
 /* HalGetChipId:
  * 0xff - RTL8711AM, 0xfe - RTL8195AM, 0xfd - RTL8711AF, 

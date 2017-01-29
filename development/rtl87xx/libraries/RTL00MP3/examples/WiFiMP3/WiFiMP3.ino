@@ -16,6 +16,15 @@ char ssid[] = "yourNetwork"; //  your network SSID (name)
 char pass[] = "password";    // your network password (use for WPA, or use as key for WEP)
 #endif //_MYAPCFG_H_
 
+#if defined(BOARD_RTL8710)
+extern "C" {
+void UserPreInit(void)
+{
+   if(HalGetCpuClk() < 166000000) Init_CPU_CLK_UART(0,38400); // 0 - 166666666 Hz, 1 - 83333333 Hz, 2 - 41666666 Hz, 3 - 20833333 Hz, 4 - 10416666 Hz, 5 - 4000000 Hz
+}  
+} // extern "C"
+#endif
+
 void setup() {
   sys_info();	
   WiFi.begin(ssid, pass);
