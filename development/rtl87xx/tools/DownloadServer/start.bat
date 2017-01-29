@@ -1,0 +1,3 @@
+@echo off
+DownloadServer 1234 %LOCALAPPDATA%\Arduino15\packages\realtek\tools\ameba_tools\1.0.8\ota.bin
+set /p DUMMY=Press Enter to Continue ...
