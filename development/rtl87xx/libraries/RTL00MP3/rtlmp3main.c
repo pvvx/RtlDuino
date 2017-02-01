@@ -57,7 +57,6 @@ char oversampling = 1;
 volatile char tskmad_enable, tskreader_enable;
 static long bufUnderrunCt;
 
-// void (*sampToOut)(u32) = i2sPushPWMSamples;
 #define sampToOut i2sPushPWMSamples
 
 #ifdef ADD_DEL_SAMPLES // correct smpr
@@ -166,7 +165,7 @@ void tskreader(void *pvParameters);
 //output it to the I2S port.
 void tskmad(void *pvParameters) {
 	//Initialize I2S
-	if (i2sInit(-1, I2S_DMA_PAGE_WAIT_MS_MIN * I2S_DMA_PAGE_SIZE_MS_96K, WL_24b)) { // min 2 ms x I2S_DMA_PAGE_SIZE buffers
+	if (i2sInit(-1, I2S_DMA_PAGE_WAIT_MS_MIN * I2S_DMA_PAGE_SIZE_MS_96K, WORD_LEN)) { // min 2 ms x I2S_DMA_PAGE_SIZE buffers
 		//Allocate structs needed for mp3 decoding
 		char * mad_bufs = pvPortMalloc(
 				sizeof(struct mad_stream) + sizeof(struct mad_frame)

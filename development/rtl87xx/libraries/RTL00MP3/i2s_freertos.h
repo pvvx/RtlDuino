@@ -31,7 +31,13 @@ typedef struct _I2S_OBJS_ {
 #endif
 }I2S_OBJS, *PI2S_OBJS;
 
+#if defined(PWM_HACK96BIT)
 #define MAX_I2S_OBJS 2
+#define WORD_LEN WL_24b
+#else
+#define MAX_I2S_OBJS 1
+#define WORD_LEN WL_16b
+#endif
 #define I2S0_OBJSN 0
 #define I2S1_OBJSN 1
 
@@ -40,7 +46,13 @@ typedef struct _I2S_OBJS_ {
 int i2sInit(int mask, int bufsize, int word_len); // word_len = WL_16b or WL_24b
 void i2sClose(int mask);
 char i2sSetRate(int mask, int rate);
+
 u32 i2sPushPWMSamples(u32 sample);
+
+#define BIT_SHIFT_CTLX_FORMAT 8
+#define BIT_MASK_CTLX_FORMAT  0x3
+#define BIT_CTLX_FORMAT(x) (((x) & BIT_MASK_CTLX_FORMAT) << BIT_SHIFT_CTLX_FORMAT)
+#define BIT_INV_CTLX_FORMAT (~(BIT_MASK_CTLX_FORMAT << BIT_SHIFT_CTLX_FORMAT))
 
 #if I2S_DEBUG_LEVEL > 1
 long i2sGetUnderrunCnt(int num);
