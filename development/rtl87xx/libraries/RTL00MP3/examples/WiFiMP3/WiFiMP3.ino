@@ -1,11 +1,21 @@
 /*
 * RTL00(RTL8710AF) MP3 MP3 stereo player
+* 
+* Configure output mode in playerconfig.h
+* 1/ For PWM must '#define PWM_HACK96BIT'
 * Output: 2xPWM 96bits pins GC_2 and PE_2
 * MP3 Bitrate: 48..96kbps !
 * https://github.com/pvvx/RTL00MP3
 * https://esp8266.ru/forum/threads/rtl00-mp3-player.1697/
+* 
+* 2/ For I2S or EIJ or any other I2S like chip, such as TDA1545, TDA1311, MS6310, MS811
+* must leave PWM_HACK96BIT undefined
+* Output pins (I2S1):
+* GC_0 - Word Select (Left/Right)
+* GC_1 - Clock
+* GC_2 - Data
+* 
 * 2016/10, RTL8710: kissste, pvvx
-* Warning: On run JTag Off! Reset module for program (connect nRST to CH_EN).
 */
 #include <WiFi.h>
 #include "RTL00MP3.h"
