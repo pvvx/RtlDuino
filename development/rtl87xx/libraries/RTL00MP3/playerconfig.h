@@ -68,7 +68,7 @@ value that has an amount of 1's set that's linearily related to the sound sample
 then output that value on the I2S port. The net result is that the average analog value on the 
 I2S data pin corresponds to the value of the MP3 sample we're trying to output. Needless to
 say, a hacked 6.5-bit PWM output is going to sound a lot worse than a real I2S codec.*/
-//#define PWM_HACK96BIT
+#define PWM_HACK96BIT
 
 /*
  * Oversamples x2 low ratio stream (>=48k). Only PWM_HACK.
