@@ -175,6 +175,12 @@ else
 printf "Image2 - None\n"
 end
 end
+set $ImageOtaAddr = {int}($SPI_FLASH_BASE + 0x9000)
+if $ImageOtaAddr != 0x80000
+printf "ImageOtaAddr = 0x%08x - Invalid!\n", $ImageOtaAddr
+else
+printf "ImageOtaAddr = 0x%08x\n", $ImageOtaAddr
+end
 end
 ###############
 # FlasherInit #
@@ -185,7 +191,6 @@ set $rtl8710_flasher_auto_erase = 1
 set $rtl8710_flasher_auto_verify = 1
 set $rtl8710_flasher_firmware_ptr = 0x10001000
 set $rtl8710_flasher_buffer = 0x10008000
-#262144
 set $rtl8710_flasher_buffer_size = 421888
 set $rtl8710_flasher_sector_size = 4096
 set $rtl8710_flasher_auto_erase_sector = 0xFFFFFFFF
@@ -225,6 +230,22 @@ if $rtl8710_flasher_capacity == 0
  printf "RTL8710 flasher initialized\n"
 else
 printf "reinitializing RTL8710 flasher\n"
+end
+end
+##################
+# FlasherRdBlock #
+##################
+define FlasherRdBlock
+#printf "FlashRdBlock 0x%08x, 0x%08x\n", $arg0, $arg1 
+set {int}($rtl8710_flasher_buffer + 0x04) = 3
+set {int}($rtl8710_flasher_buffer + 0x08) = 0
+set {int}($rtl8710_flasher_buffer + 0x10) = $arg0
+set {int}($rtl8710_flasher_buffer + 0x14) = $arg1
+set {int}($rtl8710_flasher_buffer + 0x00) = 1
+FlasherWait
+set $status = {int}($rtl8710_flasher_buffer + 0x08)
+if $status > 0
+ error "read error, offset 0x%08x", $arg0
 end
 end
 ##################
@@ -321,12 +342,30 @@ GetOtaSize ota.bin
 if $ImageOtaSize != 0
  FlasherInit
  FlasherLoad rtl8710_flasher.bin
- FlasherWrite ota.bin 0x80000 $ImageOtaSize
- set $parms1 = $rtl8710_flasher_buffer + 0x20
- restore ota.bin binary $parms1 0 0x1000
- set {int}($rtl8710_flasher_buffer + 0x28) = 0x35393138
- set {int}($rtl8710_flasher_buffer + 0x2C) = 0x31313738
- FlasherWrBlock 0x80000 0x10
+ set $FixOtaAddr = 0x80000
+ set $pbuffer = $rtl8710_flasher_buffer + 0x20
+ FlasherRdBlock 0x9000 0x1000
+ set $ImageOtaAddr = {int}($pbuffer)
+ if $ImageOtaAddr != $FixOtaAddr
+  printf "ImageOtaAddr = 0x%08x - Invalid!\n", $ImageOtaAddr
+  set {int}($rtl8710_flasher_buffer + 0x20) = $FixOtaAddr
+  set $Temp = $ImageOtaAddr & $FixOtaAddr
+  if $Temp != $FixOtaAddr
+   printf "FlashSecErase at 0x9000\n"
+   FlashSecErase 0x9000
+   printf "Write offset 0x9000 4096 bytes\n"
+   FlasherWrBlock 0x9000 0x1000
+  else
+   printf "Write offset 0x9000 4 bytes\n"
+   FlasherWrBlock 0x9000 0x0004
+  end
+ end
+ FlasherWrite ota.bin $FixOtaAddr $ImageOtaSize
+ restore ota.bin binary $pbuffer 0 0x1000
+ set {int}($pbuffer + 0x8) = 0x35393138
+ set {int}($pbuffer + 0xC) = 0x31313738
+ FlasherWrBlock $FixOtaAddr 0x10
+ FlashImagesInfo
 end
 monitor reset
 SetBootFlash
