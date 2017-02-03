@@ -33,7 +33,7 @@ monitor device Cortex-M3
 monitor endian little
 monitor reset
 # Set max speed
-monitor speed 4000
+monitor speed 3500
 set mem inaccessible-by-default off
 # Setup GDB FOR FASTER DOWNLOADS
 set remote memory-write-packet-size 8192
@@ -143,8 +143,10 @@ if $ImageAddSize != 0
  set $parms3 = $ImageOtaSize + 4
  restore $arg0 binary $parms1 $ImageOtaSize $parms3
  set $ImageAddSize = {int}($rambuffer+0)
- printf "ImageSdramSize = %d\n", $ImageAddSize
- set $ImageOtaSize = $ImageOtaSize + $ImageAddSize + 20
+ if $ImageAddSize < 0x200000
+  printf "ImageSdramSize = %d\n", $ImageAddSize
+  set $ImageOtaSize = $ImageOtaSize + $ImageAddSize + 20
+ end
 else  
  printf "Image2Size = %d !\n", $ImageOtaSize
 end
@@ -220,12 +222,11 @@ if $rtl8710_flasher_capacity == 0
  monitor go
  FlasherWait
  set $id = {int}($rtl8710_flasher_buffer + 0x0C)
+ set $rtl8710_flasher_capacity = 1 << (($id >> 16) & 0x0ff)
  if ($id == 0x1420c2) 
-  set $rtl8710_flasher_capacity = 1 << (($id >> 16) & 0x0ff)
   printf "Flash ID = 0x%08x : MX25L8006E (%d kbytes)\n", $id, $rtl8710_flasher_capacity>>10
  else 
-  set $rtl8710_flasher_capacity = 1024*1024)
-  error "Flash ID = 0x%08x : ?\n", $id
+  printf "Flash ID = 0x%08x : (%d kbytes)\n", $id, $rtl8710_flasher_capacity>>10
  end
  printf "RTL8710 flasher initialized\n"
 else
