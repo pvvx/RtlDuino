@@ -343,7 +343,27 @@ GetOtaSize ota.bin
 if $ImageOtaSize != 0
  FlasherInit
  FlasherLoad rtl8710_flasher.bin
- FlasherWrite ram_all.bin 0 0x9000
+ FlasherWrite boot.bin 0 0x9000
+ set $FixOtaAddr = 0x80000
+ set $pbuffer = $rtl8710_flasher_buffer + 0x20
+ FlasherRdBlock 0x9000 0x1000
+ set $ImageOtaAddr = {int}($pbuffer)
+ if $ImageOtaAddr != $FixOtaAddr
+  printf "ImageOtaAddr = 0x%08x - Invalid!\n", $ImageOtaAddr
+  set {int}($rtl8710_flasher_buffer + 0x20) = $FixOtaAddr
+# Set PC_1 on/off ("1"/gnd) Boot:0xB000/Boot:0x80000(OTA)
+  set {int}($rtl8710_flasher_buffer + 0x28) = 0x0000A1FF
+  set $Temp = $ImageOtaAddr & $FixOtaAddr
+  if $Temp != $FixOtaAddr
+   printf "FlashSecErase at 0x9000\n"
+   FlashSecErase 0x9000
+   printf "Write offset 0x9000 4096 bytes\n"
+   FlasherWrBlock 0x9000 0x1000
+  else
+   printf "Write offset 0x9000 16 bytes\n"
+   FlasherWrBlock 0x9000 0x10
+  end
+ end
  FlasherWrite ota.bin 0xB000 $ImageOtaSize
  set $parms1 = $rtl8710_flasher_buffer + 0x20
  restore ota.bin binary $parms1 0 0x1000

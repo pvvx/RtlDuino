@@ -1,0 +1,8 @@
+h
+r
+loadbin C:\Users\PVV\AppData\Local\Arduino15\packages\realtek\tools\ameba_tools\1.0.8\bsp\image\ram_1.r.bin 0x10000bc8
+loadbin C:\Users\PVV\AppData\Local\Arduino15\packages\realtek\tools\ameba_tools\1.0.8\ram_2.bin 0x10006000
+r
+w4 0x40000210,0x20011117
+g
+q

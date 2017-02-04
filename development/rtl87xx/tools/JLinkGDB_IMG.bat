@@ -13,7 +13,7 @@ goto end
 :no_dir
 PATH=D:\MCU\SEGGER\JLink_V612i;%LOCALAPPDATA%\Arduino15\packages\realtek\tools\ameba_tools\arm-none-eabi-gcc\4.8.3-2014q1\bin;%PATH% 
 start JLinkGDBServer.exe -device Cortex-M3 -if SWD -ir -endian little -speed 3500 
-arm-none-eabi-gdb.exe -x gdb_ota.jlink
+arm-none-eabi-gdb.exe -x gdb_img.jlink
 taskkill /F /IM JLinkGDBServer.exe
 goto end
 goto end
