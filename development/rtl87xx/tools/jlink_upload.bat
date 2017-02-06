@@ -1,17 +1,36 @@
 @echo off
 if %1x==x goto no_dir
-echo h>%1\RunRAM.JLinkScript
-echo r>>%1\RunRAM.JLinkScript
-echo loadbin %1\bsp\image\ram_1.r.bin 0x10000bc8>>%1\RunRAM.JLinkScript
-echo loadbin %1\ram_2.bin 0x10006000>>%1\RunRAM.JLinkScript
-echo r>>%1\RunRAM.JLinkScript
-echo w4 0x40000210,0x20011117>>%1\RunRAM.JLinkScript
-echo g>>%1\RunRAM.JLinkScript
-echo q>>%1\RunRAM.JLinkScript
-rem PATH=D:\MCU\SEGGER\JLink_V610a;%PATH%;
-%2\JLink.exe -Device CORTEX-M3 -If SWD -Speed 4000 %1\RunRAM.JLinkScript >null
+if not exist "%1\ota.bin" goto error_1
+if not exist "%2\run_ram.bin" goto error_2
+PATH=%1;%2;%PATH%
+cd "%2"
+copy /b "%1\ota.bin" "ota.bin"
+echo h>"RunRAM.JLinkScript"
+echo r>>"RunRAM.JLinkScript"
+echo loadbin "run_ram.bin" 0x10000bc8>>"RunRAM.JLinkScript"
+echo loadbin "ota.bin" 0x10005FF0>>"RunRAM.JLinkScript"
+echo r>>"RunRAM.JLinkScript"
+echo w4 0x40000210,0x20011117>>"RunRAM.JLinkScript"
+echo g>>"RunRAM.JLinkScript"
+echo q>>"RunRAM.JLinkScript"
+rem PATH=D:\MCU\SEGGER\JLink_V612i;%PATH%;
+"%2\JLink.exe" -Device CORTEX-M3 -If SWD -Speed 3500 "%1\RunRAM.JLinkScript" >null
 goto end_x
 :no_dir
-rem PATH=D:\MCU\SEGGER\JLink_V610a;%PATH%;
-start JLink.exe -Device CORTEX-M3 -If SWD -Speed 4000 RunRAM.JLinkScript
+rem PATH=D:\MCU\SEGGER\JLink_V612i;%PATH%;
+echo h>RunRAM.JLinkScript
+echo r>>RunRAM.JLinkScript
+echo loadbin "run_ram.bin" 0x10000bc8>>RunRAM.JLinkScript
+echo loadbin "ota.bin" 0x10005FF0>>RunRAM.JLinkScript
+echo r>>RunRAM.JLinkScript
+echo w4 0x40000210,0x20011117>>RunRAM.JLinkScript
+echo g>>RunRAM.JLinkScript
+echo q>>RunRAM.JLinkScript
+call JLink.exe -Device CORTEX-M3 -If SWD -Speed 3500 RunRAM.JLinkScript
+goto end_x
+:error_1
+echo Error: Not found ota.bin!
+goto end_x
+:error_2
+echo Error: Not found run_ram.bin!
 :end_x

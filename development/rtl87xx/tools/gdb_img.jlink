@@ -343,7 +343,7 @@ GetOtaSize ota.bin
 if $ImageOtaSize != 0
  FlasherInit
  FlasherLoad rtl8710_flasher.bin
- FlasherWrite boot.bin 0 0x9000
+ FlasherWrite boot.bin 0 0x4000
  set $FixOtaAddr = 0x80000
  set $pbuffer = $rtl8710_flasher_buffer + 0x20
  FlasherRdBlock 0x9000 0x1000
