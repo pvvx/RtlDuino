@@ -154,6 +154,7 @@ SECTIONS
     __data_start__ = .;
     *(.data*)
     __data_end__ = .;
+ 	. = ALIGN(4);
   	__ram_image2_text_end__ = .;    
   } > BD_RAM
   

@@ -1,3 +1,5 @@
+r0
+r1
 h
 r
 loadbin "run_ram.bin" 0x10000bc8

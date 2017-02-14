@@ -31,7 +31,7 @@ SECTIONS
   } > ROM_USED_RAM
 
 
-/*  Add . to assign the start address of the section,                                     * 
+/*  Add . to assign the start address of the section,
   *  to prevent the change of the start address by ld doing section alignment */  
   .ram_image1.text . :
   {
@@ -148,7 +148,8 @@ SECTIONS
     *(.wps.data*)
     *(.websocket.data*)
     __data_end__ = .;
-  	__ram_image2_text_end__ = .;    
+ 	. = ALIGN(4);
+   	__ram_image2_text_end__ = .;    
   } > BD_RAM
   
   .ram.bss :
@@ -165,6 +166,7 @@ SECTIONS
     *(.p2p.bss*)
     *(.wps.bss*)
     *(.websocket.bss*)
+    *(.uvc.ram.bss*)
 /*    *mem.o (.bss) 
     *memp.o (.bss)  */
     *(.bdsram.data*)
