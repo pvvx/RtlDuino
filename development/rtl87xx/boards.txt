@@ -18,7 +18,7 @@ rtlmodule_rtl8710.build.f_cpu=166666666L
 rtlmodule_rtl8710.build.board=rtlmodule
 rtlmodule_rtl8710.build.core=arduino
 rtlmodule_rtl8710.build.extra_flags=-mthumb -DBOARD_RTL8710
-rtlmodule_rtl8710.build.ldscript=linker_scripts/gcc/rtl8710-symbol-v03-img2_arduino_arduino.ld
+rtlmodule_rtl8710.build.ldscript=linker_scripts/gcc/rtl8710-symbol-v04-img2_arduino_arduino.ld
 rtlmodule_rtl8710.build.variant=rtl8710
 
 rtlmodule_rtl8710.menu.upload_method.jlinkram=JLink RAM
@@ -54,7 +54,7 @@ rtlmodule_rtl8711am.build.f_cpu=166666666L
 rtlmodule_rtl8711am.build.board=rtlmodule
 rtlmodule_rtl8711am.build.core=arduino
 rtlmodule_rtl8711am.build.extra_flags=-mthumb -DBOARD_RTL8711AM
-rtlmodule_rtl8711am.build.ldscript=linker_scripts/gcc/rtl8711am-symbol-v03-img2_arduino_arduino.ld
+rtlmodule_rtl8711am.build.ldscript=linker_scripts/gcc/rtl8711am-symbol-v04-img2_arduino_arduino.ld
 rtlmodule_rtl8711am.build.variant=rtl8711am
 
 rtlmodule_rtl8711am.menu.upload_method.jlgdbimg=JLink IMG
