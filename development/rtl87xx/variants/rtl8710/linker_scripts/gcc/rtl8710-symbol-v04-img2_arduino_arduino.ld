@@ -31,11 +31,11 @@ SECTIONS
 	__rom_heap_start__ = .; 
 	end = __rom_heap_start__;
   	. = ALIGN(0x1000);
-	__rom_heap_end__ = .; 
   } > ROM_HEAP
 
   .ram_heap1 : 
   {
+	__rom_heap_end__ = .; 
   	__ram_heap1_start__ = .;
   /*   *(.heap1*) */
   } > RAM_HEAP1
@@ -142,11 +142,13 @@ SECTIONS
     . = ALIGN(4);
     xHeapRegions = .;
     LONG(__ram_heap1_start__)
-    LONG(__ram_heap1_end__ - __ram_heap1_start__)
-    LONG(__ram_heap2_start__)
+    LONG(__ram_heap1_end__ - __ram_heap1_start__)   
+    LONG(__ram_heap2_start__) 
     LONG(__ram_heap2_end__ - __ram_heap2_start__)
     LONG(__sdram_heap_start__)
     LONG(__sdram_heap_end__ - __sdram_heap_start__) 
+    LONG(0)
+    LONG(0)
     LONG(0)
     LONG(0)
 
@@ -180,12 +182,23 @@ SECTIONS
     *(.wps.bss*)
     *(.websocket.bss*)
     *(.uvc.ram.bss*)
-/*    *mem.o (.bss) 
-    *memp.o (.bss)  */
+    *(.sdram.ssl_ram_map*)
+    *(.ssl_ram_map*)
+    *mem.o (.bss) 
+    *memp.o (.bss)  
     *(.bdsram.data*)
     *(.bfsram.data*)
     __bss_end__ = .;
     .ram.bss$$Limit = .;
+  } > BD_RAM
+
+  .bf_data : /* test */
+  {
+    __buffer_data_start__ = .;
+    *(.sdram*)
+    *(.data*)
+    __buffer_data_end__ = .;
+    
   } > BD_RAM
 
   .ram_heap2 : 

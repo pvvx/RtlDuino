@@ -222,12 +222,23 @@ SECTIONS
     *(.wps.bss*)
     *(.websocket.bss*)
     *(.uvc.ram.bss*)
-/*    *mem.o (.bss) 
-    *memp.o (.bss)  */
+    *(.sdram.ssl_ram_map*)
+    *(.ssl_ram_map*)
+    *mem.o (.bss) 
+    *memp.o (.bss)  
     *(.bdsram.data*)
     *(.bfsram.data*)
     __bss_end__ = .;
     .ram.bss$$Limit = .;
+  } > BD_RAM
+
+  .bf_data : /* test */
+  {
+    __buffer_data_start__ = .;
+    *(.sdram*)
+    *(.data*)
+    __buffer_data_end__ = .;
+    
   } > BD_RAM
 
   .ram_heap2 : 

@@ -1,6 +1,22 @@
 #include <WiFi.h>
 #include <myAP.h>
 
+//#if defined(BOARD_RTL8710)
+extern "C" {
+  void UserPreInit(void)
+  {
+    //if (HalGetCpuClk() < 100000000) 
+        Init_CPU_CLK_UART(7, 38400);
+    // 0 - 166,666,666 Hz, 1 - 83,333,333 Hz, 2 - 41,666,666 Hz, 3 - 20,833,333 Hz, 4 - 10,416,666 Hz, 5 - 4,000,000 Hz
+    // 6 - 200,000,000 Hz, 7 - 100,000,000 Hz, 8 - 50,000,000 Hz, 9 - 25,000,000 Hz, 10 - 12,500,000 Hz, 11 - 4,000,000 Hz
+    /* if ssl_handshake returned -0x7200 -> SSL_MAX_CONTENT_LEN to sufficient size
+      (minimum value is 512, maximum value is 16384, default value 8192 !) */
+    ssl_max_frag_len = 10240; // 512..16384, www.google.ru > 10240, github.com > 3500.
+    /* ssl used heap ~ alloc ssl_max_frag_len * 2.5 (!) */
+  }
+} // extern "C"
+//#endif // BOARD_RTL8710
+
 #ifndef _MYAPCFG_H_
 char ssid[] = "yourNetwork"; //  your network SSID (name)
 char pass[] = "password";    // your network password (use for WPA, or use as key for WEP)
@@ -9,26 +25,15 @@ int keyIndex = 0;            // your network key Index number (needed only for W
 
 int status = WL_IDLE_STATUS;
 
-char server[] = "www.google.ru";    // name address for Google (using DNS)
-//char server[] = "info.weather.yandex.net";
-//unsigned char test_client_key[] = "";   //For the usage of verifying client
-//unsigned char test_client_cert[] = "";  //For the usage of verifying client
-//unsigned char test_ca_cert[] = "";      //For the usage of verifying server
+char server[] = "yandex.ru";    // name address for Google (using DNS)
 
 WiFiSSLClient client;
-/* if ssl_handshake returned -0x7200 ->
-SSL_MAX_CONTENT_LEN to sufficient size (maximum value is 16384). 
-default value 4096. */
-extern "C" unsigned int mfl_code_to_length[]; // mfl_code_to_length[0] = SSL_MAX_CONTENT_LEN
 
 void setup() {
-  mfl_code_to_length[0] = 16384; // = max SSL_MAX_CONTENT_LEN
   //Initialize serial and wait for port to open:
+  delay(10);
   Serial.begin(38400);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
-
+  while (!Serial) ; // wait for serial port to connect. Needed for native USB port only
   // check for the presence of the shield:
   if (WiFi.status() == WL_NO_SHIELD) {
     Serial.println("WiFi shield not present");
@@ -41,27 +46,29 @@ void setup() {
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-    status = WiFi.begin(ssid,pass);
-
+    status = WiFi.begin(ssid, pass);
     // wait 0.5 seconds for connection:
     delay(500);
   }
   Serial.println("\r\nConnected to wifi");
   printWifiStatus();
 
+  sys_info();
+  debug_on();
+
   Serial.println("\nStarting connection to server...");
   // if you get a connection, report back via serial:
   if (client.connect(server, 443)) { //client.connect(server, 443, test_ca_cert, test_client_cert, test_client_key)
     Serial.println("connected to server");
     // Make a HTTP request:
-    client.println("GET /search?q=realtek HTTP/1.0");
+    client.println("GET / HTTP/1.0");
     client.print("Host: "); client.println(server); //    client.println("Host: www.google.com");
     client.println("Connection: close");
     client.println();
+    sys_info();
   }
   else
-  Serial.println("connected to server failed");
-  
+    Serial.println("connected to server failed");
 }
 
 void loop() {
@@ -76,6 +83,7 @@ void loop() {
   if (!client.connected()) {
     Serial.println();
     Serial.println("disconnecting from server.");
+    sys_info();
     client.stop();
 
     // do nothing forevermore:
@@ -94,7 +102,7 @@ void printWifiStatus() {
   Serial.print("IP Address: ");
   Serial.println(ip);
 
-    // print your MAC address:
+  // print your MAC address:
   byte mac[6];
   WiFi.macAddress(mac);
   Serial.print("MAC address: ");

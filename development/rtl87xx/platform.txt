@@ -59,7 +59,7 @@ compiler.rtlmodule.c.flags= -DCONFIG_PLATFORM_8195A -DARDUINO_SDK -DARDUINO_AMEB
 
 # rtlmodule archieve list
 # -------------------
-compiler.rtlmodule.ar.list="{rtlmodule.libs}/lib_{build.variant}.a" "{rtlmodule.libs}/lib_lwip.a" "{rtlmodule.libs}/lib_mmf.a" "{rtlmodule.libs}/lib_p2p.a" "{rtlmodule.libs}/lib_rtlstd.a" "{rtlmodule.libs}/lib_rtsp.a" "{rtlmodule.libs}/lib_sdcard_v2.a" "{rtlmodule.libs}/lib_usbd.a" "{rtlmodule.libs}/lib_usbh.a" "{rtlmodule.libs}/lib_websocket.a" "{rtlmodule.libs}/lib_wlan.a" "{rtlmodule.libs}/lib_wps.a" "{rtlmodule.libs}/lib_xmodem.a" "{rtlmodule.libs}/lib_mdns.a" "{rtlmodule.libs}/lib_websocket.a"
+compiler.rtlmodule.ar.list="{rtlmodule.libs}/lib_{build.variant}.a" "{rtlmodule.libs}/lib_lwip.a" "{rtlmodule.libs}/lib_mmf.a" "{rtlmodule.libs}/lib_p2p.a" "{rtlmodule.libs}/lib_rtlstd.a" "{rtlmodule.libs}/lib_rtsp.a" "{rtlmodule.libs}/lib_sdcard_v2.a" "{rtlmodule.libs}/lib_usbd.a" "{rtlmodule.libs}/lib_usbh.a" "{rtlmodule.libs}/lib_websocket.a" "{rtlmodule.libs}/lib_wlan.a" "{rtlmodule.libs}/lib_wps.a" "{rtlmodule.libs}/lib_xmodem.a" "{rtlmodule.libs}/lib_mdns.a" "{rtlmodule.libs}/lib_websocket.a" "{rtlmodule.libs}/lib_ssl.a"
 #compiler.rtlmodule.ar.list="{build.variant.path}/lib_arlib.a" "{build.variant.path}/lib_lwip.a" "{build.variant.path}/lib_mdns.a" "{build.variant.path}/lib_p2p.a" "{build.variant.path}/lib_platform.a" "{build.variant.path}/lib_rtlstd.a" "{build.variant.path}/lib_sdcard.a" "{build.variant.path}/lib_uvc.a" "{build.variant.path}/lib_websocket.a" "{build.variant.path}/lib_wlan.a" "{build.variant.path}/lib_wps.a" "{build.variant.path}/lib_xmodem.a"
 
 # USB Flags
