@@ -113,14 +113,14 @@ recipe.size.regex=^(?:\.ram_image1.text|\.ram_image2.text|\.image3)\s+([0-9]+).*
 
 tools.jlink.upload.params.verbose=
 tools.jlink.cmd=jlink_upload
-tools.jlink.cmd.windows=jlink_upload.bat
+tools.jlink.cmd.windows=jlink_upload.cmd
 tools.jlink.cmd.macosx=
 tools.jlink.path.macosx=
 tools.jlink.path.linux=
 tools.jlink.path.linux64=
 tools.jlink.path={runtime.tools.ameba_tools.path}
 tools.jlink.upload.params.quiet=
-tools.jlink.upload.pattern="{runtime.platform.path}/tools/jlink_upload.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}/tools"
+tools.jlink.upload.pattern="{runtime.platform.path}/tools/jlink_upload.cmd" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}/tools"
 
 tools.network.upload.params.verbose=
 tools.network.cmd=upload_ota
@@ -139,22 +139,22 @@ tools.network.network_pattern.linux="{runtime.tools.ameba_tools.path}/upload_ota
 
 tools.jlgdbota.upload.params.verbose=
 tools.jlgdbota.cmd=JLinkGDB_OTA
-tools.jlgdbota.cmd.windows=JLinkGDB_OTA.bat
+tools.jlgdbota.cmd.windows=JLinkGDB_OTA.cmd
 tools.jlgdbota.cmd.macosx=
 tools.jlgdbota.path.macosx=
 tools.jlgdbota.path.linux=
 tools.jlgdbota.path.linux64=
 tools.jlgdbota.path={runtime.tools.ameba_tools.path}
 tools.jlgdbota.upload.params.quiet=
-tools.jlgdbota.upload.pattern="{runtime.platform.path}/tools/JLinkGDB_OTA.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}\tools" "{runtime.tools.arm-none-eabi-gcc.path}\bin\"
+tools.jlgdbota.upload.pattern="{runtime.platform.path}/tools/JLinkGDB_OTA.cmd" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}\tools" "{runtime.tools.arm-none-eabi-gcc.path}\bin\"
 
 tools.jlgdbimg.upload.params.verbose=
 tools.jlgdbimg.cmd=JLinkGDB_IMG
-tools.jlgdbimg.cmd.windows=JLinkGDB_IMG.bat
+tools.jlgdbimg.cmd.windows=JLinkGDB_IMG.cmd
 tools.jlgdbimg.cmd.macosx=
 tools.jlgdbimg.path.macosx=
 tools.jlgdbimg.path.linux=
 tools.jlgdbimg.path.linux64=
 tools.jlgdbimg.path={runtime.tools.ameba_tools.path}
 tools.jlgdbimg.upload.params.quiet=
-tools.jlgdbimg.upload.pattern="{runtime.platform.path}/tools/JLinkGDB_IMG.bat" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}\tools" "{runtime.tools.arm-none-eabi-gcc.path}\bin\"
+tools.jlgdbimg.upload.pattern="{runtime.platform.path}/tools/JLinkGDB_IMG.cmd" "{runtime.tools.ameba_tools.path}" "{runtime.platform.path}\tools" "{runtime.tools.arm-none-eabi-gcc.path}\bin\"
