@@ -145,8 +145,8 @@ SECTIONS
     LONG(__ram_heap1_end__ - __ram_heap1_start__)
     LONG(__ram_heap2_start__)
     LONG(__ram_heap2_end__ - __ram_heap2_start__)
-/*    LONG(__sdram_heap_start__)
-    LONG(__sdram_heap_end__ - __sdram_heap_start__) */
+    LONG(__sdram_heap_start__)
+    LONG(__sdram_heap_end__ - __sdram_heap_start__) 
     LONG(0)
     LONG(0)
 

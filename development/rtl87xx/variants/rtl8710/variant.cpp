@@ -57,13 +57,13 @@ void *gpio_pin_struct[TOTAL_GPIO_PIN_NUM] = {NULL};
 void *gpio_irq_handler_list[TOTAL_GPIO_PIN_NUM] = {NULL};
 
 /** The heap API in OS layer */
-extern int vPortAddHeapRegion(uint8_t *addr, size_t size);
+//extern int vPortAddHeapRegion(uint8_t *addr, size_t size);
 
 // it should be the last symbol in SRAM in link result 
-extern void *__HeapLimit;
+//extern void *__HeapLimit;
 
 // it should be the last symbol in SDRAM in link result
-extern void *__sdram_bss_end__;
+//extern void *__sdram_bss_end__;
 
 //extern int HalPinCtrlRtl8195A(int  Function, int PinLocation, int Operation);
 
