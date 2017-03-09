@@ -337,7 +337,7 @@ end
 #########################################
 InitJlink
 SystemInit
-SetClk166MHz
+SetClk83MHz
 SPI_Init
 GetOtaSize ota.bin
 if $ImageOtaSize != 0
