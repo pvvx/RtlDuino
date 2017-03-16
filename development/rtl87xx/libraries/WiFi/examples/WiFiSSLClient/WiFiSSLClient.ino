@@ -3,6 +3,7 @@
 
 //#if defined(BOARD_RTL8710)
 extern "C" {
+ extern int  ssl_max_frag_len;
   void UserPreInit(void)
   {
     //if (HalGetCpuClk() < 100000000) 
