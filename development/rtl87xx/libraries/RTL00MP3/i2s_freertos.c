@@ -118,12 +118,20 @@ int i2sInit(int mask, int bufsize, int word_len) { // word_len = WL_16b or WL_24
 		    pi2s_obj->sampling_rate = SR_96KHZ;
 		    pi2s_obj->word_length = word_len;
 		    pi2s_obj->direction = I2S_DIR_TX; //consider switching to TX only
+#if defined(PWM_HACK96BIT)
 			if(i == 0) {
 				HalPinCtrlRtl8195A(JTAG, 0, 0);
 				i2s_init(pi2s_obj, I2S0_SCLK_PIN, I2S0_WS_PIN, I2S0_SD_PIN);
+			} else {
+				i2s_init(pi2s_obj, I2S1_SCLK_PIN, I2S1_WS_PIN, I2S1_SD_PIN);
 			}
-			else i2s_init(pi2s_obj, I2S1_SCLK_PIN, I2S1_WS_PIN, I2S1_SD_PIN);
+#else
+			i2s_init(pi2s_obj, I2S1_SCLK_PIN, I2S1_WS_PIN, I2S1_SD_PIN);
+#endif
 			i2s_set_param(pi2s_obj, pi2s_obj->channel_num, pi2s_obj->sampling_rate, pi2s_obj->word_length);
+			u32 Tmp = HAL_I2S_READ32(1, REG_I2S_CTL);
+			Tmp |= 	BIT_CTLX_FORMAT(FormatRightJustified);
+			HAL_I2S_WRITE32(1, REG_I2S_CTL, Tmp);
 		    i2s_set_dma_buffer(pi2s_obj, i2s_tx_buf, NULL, I2S_DMA_PAGE_NUM, page_size);
 		    i2s_tx_irq_handler(pi2s_obj, i2s_test_tx_complete, (uint32_t)pi2s_obj);
 	//    	i2s_rx_irq_handler(pi2s_obj, (i == 0)? (i2s_irq_handler)i2s1_test_rx_complete : (i2s_irq_handler)i2s2_test_rx_complete, i); // TX only!
@@ -174,7 +182,6 @@ char i2sSetRate(int mask, int rate) {
 	return result;
 }
 
-#if defined(PWM_HACK96BIT)
 //This routine pushes a single, 32-bit sample to the I2S buffers. Call this at (on average) 
 //at least the current sample rate. You can also call it quicker: it will suspend the calling
 //thread if the buffer is full and resume when there's room again.
@@ -195,6 +202,7 @@ u32 i2sPushPWMSamples(u32 sample) {
 			pi2s_cur->currDMABuffPos = 0;
 		}
 		u32 *p = &pi2s_cur->currDMABuff[pi2s_cur->currDMABuffPos];
+#if defined(PWM_HACK96BIT)
 		if(i) sample >>= 16;
 		s32 smp = (s16)sample + 0x8000 + pi2s_cur->sampl_err;
 		if (smp > 0xffff) smp = 0xffff;
@@ -232,6 +240,10 @@ u32 i2sPushPWMSamples(u32 sample) {
 			*p = 0xFFFFFFFF;
 		}
 		pi2s_cur->currDMABuffPos += 4;
+#else
+		*p = sample;
+		pi2s_cur->currDMABuffPos ++;
+#endif
 	}
 	portENTER_CRITICAL();
 	for(i = 0; i < MAX_I2S_OBJS; i++) {
@@ -255,7 +267,6 @@ u32 i2sPushPWMSamples(u32 sample) {
 	}
 	portEXIT_CRITICAL();
 }
-#endif
 
 #if I2S_DEBUG_LEVEL > 1
 long i2s1GetUnderrunCnt(int num) {
