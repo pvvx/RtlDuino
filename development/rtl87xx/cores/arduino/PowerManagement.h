@@ -16,12 +16,14 @@ public:
      * As OS consider it would idle for more than 2s, it will invoke system suspend.
      * If wlan is associated with AP, than it will under asslociated idle state.
      */
-    static void sleep();
+    static void sleep(void);
+    static void sleep(uint32_t bitflg);
 
     /**
      * @brief Disallow OS automatically save power while idle
      */
-    static void active();
+    static void active(void);
+    static void active(uint32_t bitflg);
 
     /**
      * @brief Reserved PLL while sleep

@@ -252,6 +252,8 @@ public:
 
 	int apbegin(char* ssid, char* password, char* channel);
 
+	int SetDTIM(uint8_t dtn = 1);
+
     friend class WiFiClient;
     friend class WiFiServer;
 	friend class WiFiSSLClient;

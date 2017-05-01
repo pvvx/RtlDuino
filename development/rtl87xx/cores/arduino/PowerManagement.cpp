@@ -16,7 +16,7 @@ extern "C" {
 #if defined(BOARD_RTL8195A)
 #define SAVE_LOCK_PIN 18
 #elif defined(BOARD_RTL8710)
-#define SAVE_LOCK_PIN 15
+#define SAVE_LOCK_PIN 7 // PB_1
 #else
 #define SAVE_LOCK_PIN 18
 #endif
@@ -27,13 +27,23 @@ void PowerManagementClass::setPllReserved(bool reserve) {
     pmu_set_pll_reserved(reserve);
 }
 
-void PowerManagementClass::sleep() {
+void PowerManagementClass::sleep(uint32_t bitflg) {
+    if (!safeLock()) {
+        pmu_release_wakelock(bitflg);
+    }
+}
+
+void PowerManagementClass::sleep(void) {
     if (!safeLock()) {
         pmu_release_wakelock(BIT(PMU_OS));
     }
 }
 
-void PowerManagementClass::active() {
+void PowerManagementClass::active(uint32_t bitflg) {
+    pmu_acquire_wakelock(bitflg);
+}
+
+void PowerManagementClass::active(void) {
     pmu_acquire_wakelock(BIT(PMU_OS));
 }
 

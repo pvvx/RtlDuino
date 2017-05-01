@@ -10,9 +10,13 @@
 #include <WiFi.h>
 #include <PowerManagement.h>
 
-char ssid[] = "yourNetwork";     // your network SSID (name)
-char pass[] = "secretPassword";  // your network password
+#include <myAP.h>
+//char ssid[] = "yourNetwork";     // your network SSID (name)
+//char pass[] = "secretPassword";  // your network password
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
+
+extern "C" void pmu_get_wakelock_hold_stats(char *pcWriteBuffer);
+extern "C" void pmu_enable_wakelock_stats(unsigned char enable);
 
 void setup() {
 
@@ -23,27 +27,40 @@ void setup() {
     // Connect to WPA/WPA2 network:
     status = WiFi.begin(ssid, pass);
 
-    // wait 10 seconds for connection:
-    delay(10000);
+    // wait 0.1 seconds for connection:
+    delay(100);
   }
 
   // you're connected now, so print out the data:
   Serial.print("You're connected to the network");
   printCurrentNet();
   printWifiData();
+  /* Set Station LPS DTIM(4) */
+  WiFi.SetDTIM(4);
 
   /*  If you need any peripheral while sleep, remove below line.
    *  But it makes Ameba save less power (around 5.5 mA). */
   PowerManagement.setPllReserved(false);
 
   /* Make Ameba automatically suspend and resume while there is no on-going task. */
-  PowerManagement.sleep();
+  /* (sleep < 2.5 mA, run task < 62 mA) */
+  /* 
+   * PMU_OS -  bit0,
+   * PMU_WLAN_DEVICE - bit1,
+   * PMU_LOGUART_DEVICE - bit2,
+   * PMU_SDIO_DEVICE - bit3
+   */
+  PowerManagement.sleep(5);
+  pmu_enable_wakelock_stats(1);
 }
 
 void loop() {
+  char buf[256];
   // check the network connection once every 10 seconds:
   delay(10000);
   printCurrentNet();
+  pmu_get_wakelock_hold_stats(buf);
+  Serial.println(buf);
 }
 
 void printWifiData() {

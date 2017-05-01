@@ -235,5 +235,10 @@ int WiFiClass::apbegin(char* ssid, char* password, char* channel)
 
 }
 
+int WiFiClass::SetDTIM(uint8_t dtn)
+{
+	return WiFiDrv::SetDTIM(dtn);
+}
+
 
 WiFiClass WiFi;

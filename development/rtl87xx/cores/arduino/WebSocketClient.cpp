@@ -10,7 +10,7 @@
 WebSocketClient::WebSocketClient() {
 }
 
-WebSocketClient::WebSocketClient(char *url, int port,char *path, char* origin) {
+WebSocketClient::WebSocketClient(char *url, int port, char *path, char* origin) {
 	client = create_wsclient(url, port, path, origin);
 }
 
@@ -18,7 +18,7 @@ WebSocketClient::~WebSocketClient() {
 	close();
 }
 
-int WebSocketClient::begin(char *url, int port,char *path, char* origin) {
+int WebSocketClient::begin(char *url, int port, char *path, char* origin) {
 	client = create_wsclient(url, port, path, origin);
 	if(client != NULL) return 1;
 	else return 0;
@@ -76,11 +76,9 @@ void WebSocketClient::close() {
 }
 
 extern "C" void set_ssl_func(wsclient_context *wsclient); // in example_wsclient.c
-extern "C" unsigned int mfl_code_to_length[]; // mfl_code_to_length[0] = SSL_MAX_CONTENT_LEN: 4096, 8192, 16384
 
-void WebSocketClient::ssl_func_on(int ssl_max_content_len)
+void WebSocketClient::ssl_func_on(void)
 {
-  mfl_code_to_length[0] = ssl_max_content_len; // = max SSL_MAX_CONTENT_LEN
   set_ssl_func(client);
 /*  
   client->fun_ops.ssl_fun_ops.memory_set_own = memory_set_own;

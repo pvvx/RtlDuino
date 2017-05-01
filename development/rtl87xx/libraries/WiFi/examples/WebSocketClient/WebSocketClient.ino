@@ -17,6 +17,19 @@ char pass[] = "password";    // your network password (use for WPA, or use as ke
 
 char * ws_state[4] = { "CLOSING", "CLOSED", "CONNECTING", "OPEN" };
 
+#if USE_SSL_WEBSOCKED
+extern "C" {
+ extern int  ssl_max_frag_len;
+  void UserPreInit(void)
+  {
+    /* if ssl_handshake returned -0x7200 -> SSL_MAX_CONTENT_LEN to sufficient size
+      (minimum value is 512, maximum value is 16384, default value 8192 !) */
+    ssl_max_frag_len = 10240; // 512..16384, www.google.ru > 10240, github.com > 3500.
+    /* ssl used heap ~ alloc ssl_max_frag_len * 2.5 (!) */
+  }
+} // extern "C"
+#endif    
+
 void setup() {
   WiFi.begin(ssid, pass);
 }
@@ -69,12 +82,11 @@ void loop() {
     printf("\nConnect %s ...\n", host);
     WebSocketClient *ws = new WebSocketClient(host, host_port, path, origin);
 #if USE_SSL_WEBSOCKED
-    ws->ssl_func_on(16384); // If 'ssl_handshake failed ret(-0x7200)' -> set ssl_max_content_len = 16384
+    ws->ssl_func_on();
 #endif    
     ws->dispatch(ws_message);
     if(ws->connect() >= 0 ) {
       printf("ws: connected, state = %s\n", ws_state[ws->getReadyState()]);
-
       printf("ws: send text msg\n");
       rx_msg = 0;
       tx_code = 1;

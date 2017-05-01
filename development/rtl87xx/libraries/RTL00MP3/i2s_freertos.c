@@ -29,25 +29,28 @@ speed.
 #include "queue.h"
 #include "playerconfig.h"
 
+#include "osdep_api.h"
 #include "i2s_api.h"
 #include "i2s_freertos.h"
 
 #define USE_RTL_I2S_API  0 // speed
 
 PI2S_OBJS pi2s[MAX_I2S_OBJS]; // I2S0, I2S1
+xSemaphoreHandle I2sTxSema;
 
 // i2s interrupt callback
 static void i2s_test_tx_complete(void *data, char *pbuf)
 {
-#if I2S_DEBUG_LEVEL > 1
     i2s_t *i2s_obj = (i2s_t *)data;
 	int idx = i2s_obj->InitDat.I2SIdx;
+#if I2S_DEBUG_LEVEL > 1
 	int reg = HAL_I2S_READ32(idx, REG_I2S_TX_PAGE0_OWN);
 	reg |= HAL_I2S_READ32(idx, REG_I2S_TX_PAGE1_OWN);
 	reg |= HAL_I2S_READ32(idx, REG_I2S_TX_PAGE2_OWN);
 	reg |= HAL_I2S_READ32(idx, REG_I2S_TX_PAGE3_OWN);
 	if(!(reg & BIT_PAGE_I2S_OWN_BIT)) pi2s[idx]->underrunCnt++;
 #endif
+	if(!idx) xSemaphoreGive(I2sTxSema);
 }
 
 void i2sClose(int mask) {
@@ -68,7 +71,10 @@ void i2sClose(int mask) {
 				}
 				vPortFree(pi2s[i]);
 				pi2s[i] = NULL;
-				if(i==0) HalPinCtrlRtl8195A(JTAG, 0, 1);
+				if(i==0) {
+					vSemaphoreDelete(I2sTxSema);
+					HalPinCtrlRtl8195A(JTAG, 0, 1);
+				}
 				DBG_8195A("I2S%d: Closed.\n", i);
 			}
 		}
@@ -121,6 +127,8 @@ int i2sInit(int mask, int bufsize, int word_len) { // word_len = WL_16b or WL_24
 			if(i == 0) {
 				HalPinCtrlRtl8195A(JTAG, 0, 0);
 				i2s_init(pi2s_obj, I2S0_SCLK_PIN, I2S0_WS_PIN, I2S0_SD_PIN);
+			    // Create a Semaphone
+				RtlInitSema(&I2sTxSema, 1);
 			}
 			else i2s_init(pi2s_obj, I2S1_SCLK_PIN, I2S1_WS_PIN, I2S1_SD_PIN);
 			i2s_set_param(pi2s_obj, pi2s_obj->channel_num, pi2s_obj->sampling_rate, pi2s_obj->word_length);
@@ -186,11 +194,12 @@ u32 i2sPushPWMSamples(u32 sample) {
 		while(pi2s_cur->currDMABuff == NULL){
 #if USE_RTL_I2S_API
 			pi2s_cur->currDMABuff = i2s_get_tx_page(&pi2s_cur->i2s_obj);
-			if(pi2s_cur->currDMABuff == NULL) vTaskDelay(I2S_DMA_PAGE_WAIT_MS_MIN);
+			if(pi2s_cur->currDMABuff == NULL) RtlDownSema(&I2sTxSema);
 #else
 			u8 page_idx = HalI2SGetTxPage((VOID*)I2SAdapter->pInitDat);
 			if(page_idx < I2S_DMA_PAGE_NUM)	pi2s_cur->currDMABuff = ((u32 *)I2SAdapter->TxPageList[page_idx]);
-			else vTaskDelay(I2S_DMA_PAGE_WAIT_MS_MIN);
+			else xSemaphoreTake(I2sTxSema, portMAX_DELAY);
+//				RtlDownSema(&I2sTxSema);
 #endif
 			pi2s_cur->currDMABuffPos = 0;
 		}

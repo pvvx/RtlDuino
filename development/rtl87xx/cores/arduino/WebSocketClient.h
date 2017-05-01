@@ -105,11 +105,10 @@ public:
 /*************************************************************************************************
 ** Function Name  : ssl_func_on
 ** Description    : Set SSL/TSL function
-** Input          : ssl_max_content_len: 4096, 8192, 16384
-** 				    If 'ssl_handshake failed ret(-0x7200)' -> set ssl_max_content_len = 16384
+** Input          : None
 ** Return         : None
 **************************************************************************************************/
-	void ssl_func_on(int ssl_max_content_len);
+	void ssl_func_on(void);
 	
 private:
     wsclient_context *client;
