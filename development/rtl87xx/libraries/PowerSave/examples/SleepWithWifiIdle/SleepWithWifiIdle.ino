@@ -1,11 +1,11 @@
 /*
- * Demonstrates use of sleep api of power management with wlan connected
- *
- * This sketch enable sleep mode after wifi connected.
- * You can ping Ameba's IP while Ameba is under sleep mode and Ameba will
- * echo back. If you ping with high frequency and network traffic becomes high,
- * then Ameba will keep awake until traffic becomes low.
- */
+   Demonstrates use of sleep api of power management with wlan connected
+
+   This sketch enable sleep mode after wifi connected.
+   You can ping Ameba's IP while Ameba is under sleep mode and Ameba will
+   echo back. If you ping with high frequency and network traffic becomes high,
+   then Ameba will keep awake until traffic becomes low.
+*/
 
 #include <WiFi.h>
 #include <PowerManagement.h>
@@ -39,18 +39,29 @@ void setup() {
   WiFi.SetDTIM(4);
 
   /*  If you need any peripheral while sleep, remove below line.
-   *  But it makes Ameba save less power (around 5.5 mA). */
+      But it makes Ameba save less power (around 5.5 mA). */
   PowerManagement.setPllReserved(false);
 
   /* Make Ameba automatically suspend and resume while there is no on-going task. */
-  /* (sleep < 2.5 mA, run task < 62 mA) */
-  /* 
-   * PMU_OS -  bit0,
-   * PMU_WLAN_DEVICE - bit1,
-   * PMU_LOGUART_DEVICE - bit2,
-   * PMU_SDIO_DEVICE - bit3
-   */
+  /*
+     PMU_OS -  bit0,
+     PMU_WLAN_DEVICE - bit1,
+     PMU_LOGUART_DEVICE - bit2,
+     PMU_SDIO_DEVICE - bit3
+  */
   PowerManagement.sleep(5);
+  /* Enable Log:
+    SSID: HOME_AP
+    BSSID: 90:9:EB:C5:12:34
+    signal strength (RSSI):-27
+    Encryption Type:4
+
+    wakelock_id     holdtime
+    0               43883662
+    1               7364455
+    time passed: 43883662 ms, system sleep 35930238 ms
+  */
+  /* (sleep < 2.5 mA, run task < 62 mA) -> 82% sleep: ~13.3 mA  */
   pmu_enable_wakelock_stats(1);
 }
 
