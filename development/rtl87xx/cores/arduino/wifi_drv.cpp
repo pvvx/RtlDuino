@@ -29,7 +29,8 @@ char 	 WiFiDrv::_networkSsid[][WL_SSID_MAX_LENGTH] = {{"1"},{"2"},{"3"},{"4"},{"
 int32_t  WiFiDrv::_networkRssi[WL_NETWORKS_LIST_MAXNUM] = { 0 };
 uint32_t WiFiDrv::_networkEncr[WL_NETWORKS_LIST_MAXNUM] = { 0 };
 
-static bool init_wlan = false;
+static char init_wlan = false;
+static char init_lwip = false;
 
 static rtw_network_info_t wifi = {0};
 static rtw_ap_info_t ap = {0};
@@ -55,9 +56,12 @@ static void init_wifi_struct(void)
 
 void WiFiDrv::wifiDriverInit()
 {
+    if (init_lwip == false) {
+	    init_lwip = true;
+        LwIP_Init();
+	}        
     if (init_wlan == false) {
         init_wlan = true;
-        LwIP_Init();
         wifi_on(RTW_MODE_STA);
     }
 }
@@ -316,6 +320,7 @@ int8_t WiFiDrv::disconnect()
 int8_t WiFiDrv::off()
 {
 	wifi_off();
+    init_wlan = false;
     return WL_DISCONNECTED;
 }
 
