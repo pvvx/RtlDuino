@@ -251,25 +251,38 @@ size_t YsPngBinaryFileStream::Read(unsigned char buf[], size_t readSize)
 
 YsPngBinaryMemoryStream::YsPngBinaryMemoryStream(size_t dataSize, unsigned char binaryData[]) 
 {
-	this->offset_rd=0;
-	this->offset_wr=dataSize;
+	offset_rd=0;
+	offset_wr=dataSize;
 	this->dataSize=dataSize;
 	this->binaryData=binaryData;
 }
 
-YsPngBinaryMemoryStream::YsPngBinaryMemoryStream(size_t dataSize)
+extern "C" void *tcm_heap_malloc(int size);
+//extern "C" void tcm_heap_free(void * mem);
+
+void YsPngBinaryMemoryStream::ResetStream(void)
 {
-	this->offset_wr=0;
-	this->offset_rd=0;
-	this->binaryData = new unsigned char [dataSize];
-	if(this->binaryData != NULL) this->dataSize = dataSize;
+	offset_wr=0;
+	offset_rd=0;
+}
+
+YsPngBinaryMemoryStream::YsPngBinaryMemoryStream(size_t dataSize, bool buf_tcm)
+{
+	offset_wr=0;
+	offset_rd=0;
+	
+	if(buf_tcm) binaryData = (unsigned char *)tcm_heap_malloc(dataSize);
+	else binaryData = (unsigned char *)malloc(dataSize);
+//	if(binaryData == NULL) binaryData = new unsigned char [dataSize];
+	if(binaryData != NULL) this->dataSize = dataSize;
 	else this->dataSize=0;
 } 
 
 YsPngBinaryMemoryStream::~YsPngBinaryMemoryStream()
 {
 	if(binaryData) {
-		delete [] binaryData;
+		free(binaryData);
+//		delete [] binaryData;
 		binaryData = NULL;
 	}
 }

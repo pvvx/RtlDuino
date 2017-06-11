@@ -164,8 +164,9 @@ private:
 	unsigned char *binaryData;
 public:
 	~YsPngBinaryMemoryStream();
-	YsPngBinaryMemoryStream(size_t dataSize);
+	YsPngBinaryMemoryStream(size_t dataSize, bool buf_tcm = false);
 	YsPngBinaryMemoryStream(size_t dataSize, unsigned char binaryData[]);
+	void ResetStream(void);
 	size_t offset_rd;
 	size_t offset_wr;
 	size_t Write(unsigned char c);
