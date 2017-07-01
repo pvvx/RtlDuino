@@ -3,13 +3,17 @@
 */
 
 #include "SdFatFs.h"
+extern "C" {
+void UserPreInit(void)
+{
+   Init_CPU_CLK_UART(0,38400); // 83.3 MHz
+   // 0 - 166666666 Hz, 1 - 83333333 Hz, 2 - 41666666 Hz, 3 - 20833333 Hz, 4 - 10416666 Hz, 5 - 4000000 Hz
+   // 6 - 200000000 Hz, 7 - 10000000 Hz, 8 - 50000000 Hz, 9 - 25000000 Hz, 10 - 12500000 Hz, 11 - 4000000 Hz
+}  
+} // extern "C"
 
 void setup() {
   debug_on();
-  for (int i = 512; i < 64 * 1024; i <<= 1) {
-    test(i);
-    delay(1000);
-  }
 }
 
 void test(int rd_buf_size) {
@@ -23,7 +27,7 @@ void test(int rd_buf_size) {
   uint8_t attr;
 
   char * absolute_filename = new char[rd_buf_size];
-  char * buf = new char[512];
+  char * buf = new char[1024];
   char * fbuf = new char[rd_buf_size];
   printf("\nTest read file buf %d bytes:\n", rd_buf_size);
   SdFatFs fs;
@@ -40,7 +44,6 @@ void test(int rd_buf_size) {
   printf("\nDir: '%s*.*'\n", fs.getRootPath());
   buf[0] = 0;
   fs.readDir(fs.getRootPath(), buf, 512);
-
   char *p = buf;
   while (strlen(p) > 0) {
     int i = printf(" ") + printf(p);
@@ -70,7 +73,6 @@ void test(int rd_buf_size) {
     }
     p += strlen(p) + 1;
   }
-
   delete[] fbuf;
   delete[] buf;
   delete[] absolute_filename;
@@ -80,5 +82,8 @@ void test(int rd_buf_size) {
 }
 
 void loop() {
-
+  for (int i = 32 * 1024; i >= 512; i >>= 1) {
+    test(i);
+    delay(1000);
+  }
 }
