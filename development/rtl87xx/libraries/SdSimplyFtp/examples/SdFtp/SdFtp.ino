@@ -4,9 +4,18 @@
 #include "ftps.h"
 #include <myAP.h>
 
-//char ssid[] = "yourNetwork"; //  your network SSID (name)
+//char ssid[] = "HOMEAP"; //  your network SSID (name)
 //char pass[] = "password";    // your network password (use for WPA, or use as key for WEP)
 //int keyIndex = 0;            // your network key Index number (needed only for WEP)
+
+extern "C" {
+void UserPreInit(void)
+{
+   Init_CPU_CLK_UART(0,38400); // 166 MHz
+   // 0 - 166666666 Hz, 1 - 83333333 Hz, 2 - 41666666 Hz, 3 - 20833333 Hz, 4 - 10416666 Hz, 5 - 4000000 Hz
+   // 6 - 200000000 Hz, 7 - 10000000 Hz, 8 - 50000000 Hz, 9 - 25000000 Hz, 10 - 12500000 Hz, 11 - 4000000 Hz
+}  
+} // extern "C"
 
 SdFatFs fs;
 
