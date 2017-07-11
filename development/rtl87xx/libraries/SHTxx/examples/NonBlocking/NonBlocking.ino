@@ -19,7 +19,7 @@
 PinName dataPin =  PC_4;//12;                 // SHTxx serial data
 PinName sclkPin =  PC_5;//13;                 // SHTxx serial clock
 volatile uint8_t * pledPin;
-const unsigned long TRHSTEP   = 750UL;  // Sensor query period
+const unsigned long TRHSTEP   = 1000UL;  // Sensor query period
 const unsigned long BLINKSTEP =  250UL;  // LED blink period
 
 SHTxx sht = SHTxx(dataPin, sclkPin);
@@ -45,18 +45,20 @@ void setup() {
   byte stat;
   Serial.begin(38400);
   pledPin = HardSetPin(PA_4, DOUT_PUSH_PULL, 1); 
-  delay(55);                             // Wait >= 11 ms before first cmd
+  delay(15);                             // Wait >= 11 ms before first cmd
 // Demonstrate status register read/write
   if (error = sht.readSR(&stat))         // Read sensor status register
     logError(error);
   Serial.print("Status reg = 0x");
   Serial.println(stat, HEX);
+#ifndef DEFAULT_RES  
   if (error = sht.writeSR(LOW_RES))      // Set sensor to low resolution
     logError(error);
   if (error = sht.readSR(&stat))         // Read sensor status register again
     logError(error);
   Serial.print("Status reg = 0x");
   Serial.println(stat, HEX);
+#endif  
 // Demonstrate blocking calls
   if (error = sht.measTemp(&rawData))    // sht.meas(TEMP, &rawData, BLOCK)
     logError(error);
@@ -91,9 +93,9 @@ void loop() {
       logError(error);
     if (measType == TEMP) {                    // Process temp or humi?
       measType = HUMI;
-      temperature = sht.calcTemp(rawData);     // Convert raw sensor data
       if ((error = sht.meas(HUMI, &rawData, NONBLOCK))!= 0) // Start humi measurement
         logError(error);
+      temperature = sht.calcTemp(rawData);     // Convert raw sensor data
     } else {
       measActive = false;
       humidity = sht.calcHumi(rawData, temperature); // Convert raw sensor data
@@ -117,10 +119,12 @@ void setup() {
   sht.readSR(&stat);                     // Read sensor status register
   Serial.print("Status reg = 0x");
   Serial.println(stat, HEX);
+#ifndef DEFAULT_RES  
   sht.writeSR(LOW_RES);                  // Set sensor to low resolution
   sht.readSR(&stat);                     // Read sensor status register again
   Serial.print("Status reg = 0x");
   Serial.println(stat, HEX);
+#endif  
 // Demonstrate blocking calls
   sht.measTemp(&rawData);                // sht.meas(TEMP, &rawData, BLOCK)
   temperature = sht.calcTemp(rawData);

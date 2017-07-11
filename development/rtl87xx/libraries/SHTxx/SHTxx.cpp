@@ -33,24 +33,36 @@ const bool noACK  = false;
 const bool ACK    = true;
 
 // Temperature & humidity equation constants
+
+#ifdef FOST02 
+  const float D1  = -40.0;          // for deg C @ 5V
+  const float D2h =   0.04;         // for deg C, 12-bit precision
+  const float D2l =   0.04;         // for deg C, 12-bit precision
+
+  const float C1  = -4.0000;        // for FOST02 sensors
+  const float C2h =  0.6480;        // for FOST02 sensors, 8-bit precision
+  const float C3h = -7.2000E-4;     // for FOST02 sensors, 8-bit precision
+  const float C2l =  0.6480;        // for FOST02 sensors, 8-bit precision
+  const float C3l = -7.2000E-4;     // for FOST02 sensors, 8-bit precision
+
+  const float T1  =  0.01;          // for V3 and V4 sensors
+  const float T2h =  0.00008;       // for V3 and V4 sensors, 12-bit precision
+  const float T2l =  0.00008;       // for V3 and V4 sensors, 12-bit precision
+#else  
   const float D1  = -40.1;          // for deg C @ 5V
   const float D2h =   0.01;         // for deg C, 14-bit precision
   const float D2l =   0.04;         // for deg C, 12-bit precision
 
-//  const float C1  = -4.0000;        // for V3 sensors
-//  const float C2h =  0.0405;        // for V3 sensors, 12-bit precision
-//  const float C3h = -2.8000E-6;     // for V3 sensors, 12-bit precision
-//  const float C2l =  0.6480;        // for V3 sensors, 8-bit precision
-//  const float C3l = -7.2000E-4;     // for V3 sensors, 8-bit precision
   const float C1  = -2.0468;        // for V4 sensors
   const float C2h =  0.0367;        // for V4 sensors, 12-bit precision
   const float C3h = -1.5955E-6;     // for V4 sensors, 12-bit precision
   const float C2l =  0.5872;        // for V4 sensors, 8-bit precision
   const float C3l = -4.0845E-4;     // for V4 sensors, 8-bit precision
-
+  
   const float T1  =  0.01;          // for V3 and V4 sensors
   const float T2h =  0.00008;       // for V3 and V4 sensors, 12-bit precision
   const float T2l =  0.00128;       // for V3 and V4 sensors, 8-bit precision
+#endif  
 
 
 /******************************************************************************
@@ -316,16 +328,24 @@ void SHTxx::resetConnection(void) {
 
 // Calculates temperature in degrees C from raw sensor data
 float SHTxx::calcTemp(uint16_t rawData) {
+#ifdef DEFAULT_RES
+  return D1 + D2h * (float) rawData;
+#else
   if (_stat_reg & LOW_RES)
     return D1 + D2l * (float) rawData;
   else
     return D1 + D2h * (float) rawData;
+#endif
 }
 
 // Calculates relative humidity from raw sensor data
 //   (with temperature compensation)
 float SHTxx::calcHumi(uint16_t rawData, float temp) {
   float humi;
+#ifdef DEFAULT_RES
+  humi = C1 + C2h * rawData + C3h * rawData * rawData;
+  humi = (temp - 25.0) * (T1 + T2h * rawData) + humi;
+#else
   if (_stat_reg & LOW_RES) {
     humi = C1 + C2l * rawData + C3l * rawData * rawData;
     humi = (temp - 25.0) * (T1 + T2l * rawData) + humi;
@@ -333,6 +353,7 @@ float SHTxx::calcHumi(uint16_t rawData, float temp) {
     humi = C1 + C2h * rawData + C3h * rawData * rawData;
     humi = (temp - 25.0) * (T1 + T2h * rawData) + humi;
   }
+#endif  
   if (humi > 100.0) humi = 100.0;
   if (humi < 0.1) humi = 0.1;
   return humi;

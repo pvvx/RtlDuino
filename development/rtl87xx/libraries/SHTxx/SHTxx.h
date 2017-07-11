@@ -22,6 +22,10 @@ extern "C" {
 // Enable CRC checking
 #define CRC_ENA
 
+#define DEFAULT_RES // Only 14-bit Temp / 12-bit RH 
+//#define FOST02 // Else SHTxxx
+
+
 // Clock pulse timing macros
 // Lengthening these may assist communication over long wires
 #define PULSE_LONG  delayMicroseconds(4)
@@ -64,13 +68,13 @@ class SHTxx
     uint8_t putByte(uint8_t value);
     uint8_t getByte(bool ack);
     void startTransmission(void);
+    void resetConnection(void);
 #ifdef CRC_ENA
     void calcCRC(uint8_t value, uint8_t *crc);
     uint8_t bitrev(uint8_t value);
 #endif
 
   public:
-    void resetConnection(void);
     SHTxx(PinName dataPin, PinName clockPin);
     uint8_t measure(float *temp, float *humi, float *dew);   
     uint8_t meas(uint8_t cmd, uint16_t *result, bool block);
