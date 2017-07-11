@@ -1,0 +1,42 @@
+#######################################
+# Syntax Coloring Map For Sensirion
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+SHTxx	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+measure	KEYWORD2
+meas	KEYWORD2
+measTemp	KEYWORD2
+measHumi	KEYWORD2
+measRdy	KEYWORD2
+writeSR	KEYWORD2
+readSR	KEYWORD2
+reset	KEYWORD2
+calcTemp	KEYWORD2
+calcHumi	KEYWORD2
+calcDewpoint	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+TEMP	LITERAL1
+HUMI	LITERAL1
+BLOCK	LITERAL1
+NONBLOCK	LITERAL1
+LOW_RES	LITERAL1
+NORELOAD	LITERAL1
+HEAT_ON	LITERAL1
+BATT_LOW	LITERAL1
+S_Err_NoACK	LITERAL1
+S_Err_CRC	LITERAL1
+S_Err_TO	LITERAL1
+S_Meas_Rdy	LITERAL1
