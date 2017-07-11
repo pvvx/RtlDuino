@@ -32,14 +32,6 @@ volatile uint8_t * GetInPinBitBandAddr(PinName pin) {
 volatile uint8_t * HardSetPin(PinName pin, HAL_GPIO_PIN_MODE pmode, uint8_t val)
 {
 	volatile uint8_t *paddr = NULL;
-/*	
-		delayMicroseconds(100);
-		rtl_printf("\nLocal_Gpio_Dir = %p, %p, %p\n", _pHAL_Gpio_Adapter->Local_Gpio_Dir[0], _pHAL_Gpio_Adapter->Local_Gpio_Dir[1], _pHAL_Gpio_Adapter->Local_Gpio_Dir[2]);
-		rtl_printf("GPIO_PORT_DR = %p, %p, %p\n", *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTA_DR)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTB_DR)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTC_DR)));
-		rtl_printf("GPIO_PORT_CTRL = %p, %p, %p\n", *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTA_CTRL)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTB_CTRL)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTC_CTRL)));
-		rtl_printf("GPIO_PORT_DDR = %p, %p, %p\n", *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTA_DDR)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTB_DDR)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTC_DDR)));
-		delayMicroseconds(100);
-*/		
 	uint32_t ippin = HAL_GPIO_GetIPPinName_8195a(pin);
 	if(ippin < 0xff) {
 		if(_pHAL_Gpio_Adapter == NULL) {
@@ -59,19 +51,8 @@ volatile uint8_t * HardSetPin(PinName pin, HAL_GPIO_PIN_MODE pmode, uint8_t val)
 		HAL_GPIO_Init_8195a(&gpio);
 		*paddr = val;						// data register
 //		paddr[(GPIO_PORTB_DDR - GPIO_PORTB_DR) * 32] = pmode == DOUT_PUSH_PULL;	// data direction
-//		HAL_GPIO_Init(&gpio);
 //		GPIO_PullCtrl_8195a(ippin, pmode);					// set GPIO_PULL_CTRLx
 //		paddr[(GPIO_PORTB_CTRL - GPIO_PORTB_DR) * 32] = 0;		// data source control, we should keep it as default: data source from software
-  	
-//    	GPIO_PullCtrl_8195a (ippin, pmode);
-
-		delayMicroseconds(100);
-		rtl_printf("\nLocal_Gpio_Dir = %p, %p, %p\n", _pHAL_Gpio_Adapter->Local_Gpio_Dir[0], _pHAL_Gpio_Adapter->Local_Gpio_Dir[1], _pHAL_Gpio_Adapter->Local_Gpio_Dir[2]);
-		rtl_printf("GPIO_PORT_DR = %p, %p, %p\n", *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTA_DR)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTB_DR)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTC_DR)));
-		rtl_printf("GPIO_PORT_CTRL = %p, %p, %p\n", *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTA_CTRL)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTB_CTRL)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTC_CTRL)));
-		rtl_printf("GPIO_PORT_DDR = %p, %p, %p\n", *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTA_DDR)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTB_DDR)), *((uint32_t*)(GPIO_REG_BASE+GPIO_PORTC_DDR)));
-		rtl_printf("GPIO_EXT_PORT = %p, %p, %p\n", *((uint32_t*)(GPIO_REG_BASE+GPIO_EXT_PORTA)), *((uint32_t*)(GPIO_REG_BASE+GPIO_EXT_PORTB)), *((uint32_t*)(GPIO_REG_BASE+GPIO_EXT_PORTC)));
-		delayMicroseconds(100);
 	}
 	return paddr;
 }
