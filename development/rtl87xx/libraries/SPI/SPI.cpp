@@ -59,6 +59,7 @@ void SPIClass::beginTransaction(SPISettings settings)
 
 void SPIClass::endTransaction(void)
 {
+//    while(spi_busy((spi_t *)pSpiMaster));
     if (pinUserSS >= 0) {
         digitalWrite(pinUserSS, 1);
         pinUserSS = -1;
@@ -91,7 +92,7 @@ byte SPIClass::transfer(byte _pin, uint8_t _data, SPITransferMode _mode)
         pinMode(_pin, OUTPUT);
         digitalWrite(_pin, 0);
     }
-
+    
     d = (byte) spi_master_write( (spi_t *)pSpiMaster, _data );
 
     if (_pin != pinSS && _mode == SPI_LAST) {
@@ -105,7 +106,7 @@ byte SPIClass::transfer(uint8_t _data, SPITransferMode _mode)
 {
     return transfer(pinSS, _data, _mode);
 }
-
+/*
 void SPIClass::transfer(byte _pin, void *_buf, size_t _count, SPITransferMode _mode)
 {
     if (_pin != pinSS) {
@@ -114,6 +115,22 @@ void SPIClass::transfer(byte _pin, void *_buf, size_t _count, SPITransferMode _m
     }
 
     spi_master_write_stream( (spi_t *)pSpiMaster , (char *)_buf, (uint32_t)_count );
+    while(spi_busy((spi_t *)pSpiMaster));
+
+
+    if (_pin != pinSS && _mode == SPI_LAST) {
+        digitalWrite(_pin, 1);
+    }
+}
+*/
+
+void SPIClass::transfer(byte _pin, void *_buf, size_t _count, SPITransferMode _mode)
+{
+    if (_pin != pinSS) {
+        pinMode(_pin, OUTPUT);
+        digitalWrite(_pin, 0);
+    }
+    spi_master_write_read_stream( (spi_t *)pSpiMaster , (char *)_buf, (char *)_buf, (uint32_t)_count );
     while(spi_busy((spi_t *)pSpiMaster));
 
 
@@ -184,8 +201,9 @@ void SPIClass::setDefaultFrequency(int _frequency)
     defaultFrequency = _frequency;
 }
 
+												// mosi, miso, clk, ss
 #if defined(BOARD_RTL8710)
-SPIClass SPI((void *)(&spi_obj), 10, 11, 9, 8);
+SPIClass SPI((void *)(&spi_obj), 10, 11, 9, 8); // PC_2, PC_3, PC_1, PC_0
 #else
-SPIClass SPI((void *)(&spi_obj), 11, 12, 13, 10);
+SPIClass SPI((void *)(&spi_obj), 11, 12, 10, 9); // PC_2, PC_3, PC_1, PC_0
 #endif
