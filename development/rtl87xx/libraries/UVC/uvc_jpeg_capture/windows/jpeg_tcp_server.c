@@ -14,7 +14,7 @@ Compile under windows (using mingw):
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
 
 #define BUFSIZE 1500 
-#define PORT 5001
+#define PORT 5007
 
 int fileindex = 0;
 FILE *pJPEG = NULL;

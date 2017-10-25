@@ -31,11 +31,11 @@ SECTIONS
 	__rom_heap_start__ = .; 
 	end = __rom_heap_start__;
   	. = ALIGN(0x1000);
-	__rom_heap_end__ = .; 
   } > ROM_HEAP
 
   .ram_heap1 : 
   {
+	__rom_heap_end__ = .; 
   	__ram_heap1_start__ = .;
   /*   *(.heap1*) */
   } > RAM_HEAP1
@@ -85,48 +85,6 @@ SECTIONS
   	__tcm_heap_end__ = .;
   } > TCM_TAB
 
-  .sdr_text :
-  {
-    __sdram_data_start__ = .;
-    *(.sdram.text*)
-    *(.p2p.text*)
-    *(.wps.text*)
-    *(.websocket.text*)
-  } > SDRAM_RAM
-
-  .sdr_rodata :
-  {
-    *(.sdram.rodata*)
-    *(.p2p.rodata*)
-    *(.wps.rodata*)
-    *(.websocket.rodata*)
-  } > SDRAM_RAM
-
-  .sdr_data : 
-  {
-    INCLUDE "sdram_obj_list.txt"
-    *(.sdram.data*)
-    *(.p2p.data*)
-    *(.wps.data*)
-    *(.websocket.data*)
-    __sdram_data_end__ = .;
-  } > SDRAM_RAM
-
-  .sdr_bss :
-  {
-    __sdram_bss_start__ = .;
-    *(.sdram.bss*)
-    *(.p2p.bss*)
-    *(.wps.bss*)
-    *(.websocket.bss*)
-    *mem.o (.bss) 
-    *memp.o (.bss) 
-    __sdram_bss_end__ = .;
-    . = ALIGN(8);
-  	__sdram_heap_start__ = .;
-  } > SDRAM_RAM
-  __sdram_heap_end__ = 0x30200000;
-
   .image2.start.table :
   {
   	__ram_heap1_end__ = .;
@@ -138,6 +96,16 @@ SECTIONS
     KEEP(*(.image2.validate.rodata*))
     KEEP(*(.custom.validate.rodata*))
   } > BD_RAM
+
+  .sdr_text :
+  {
+    __sdram_data_start__ = .;
+    INCLUDE "sdram_obj_list.txt"
+	*(.sdram.text*) 
+    *(.p2p.text*)
+    *(.wps.text*)
+    *(.websocket.text*)
+  } > SDRAM_RAM
 
   .ram_image2.text :
   {
@@ -173,22 +141,16 @@ SECTIONS
     *(.fwu.text*)
     *(.otg.rom.text*)
     *(.text*)
-    *(.sdram.text*)
-    *(.p2p.text*)
-    *(.wps.text*)
-    *(.websocket.text*)
-    *(.sdram.rodata*)
-    *(.p2p.rodata*)
-    *(.wps.rodata*)
-    *(.websocket.rodata*)
     . = ALIGN(4);
     xHeapRegions = .;
     LONG(__ram_heap1_start__)
-    LONG(__ram_heap1_end__ - __ram_heap1_start__)
-    LONG(__ram_heap2_start__)
+    LONG(__ram_heap1_end__ - __ram_heap1_start__)   
+    LONG(__ram_heap2_start__) 
     LONG(__ram_heap2_end__ - __ram_heap2_start__)
     LONG(__sdram_heap_start__)
     LONG(__sdram_heap_end__ - __sdram_heap_start__) 
+    LONG(0)
+    LONG(0)
     LONG(0)
     LONG(0)
 
@@ -198,10 +160,6 @@ SECTIONS
   {
     __data_start__ = .;
     *(.data*)
-    *(.sdram.data*)
-    *(.p2p.data*)
-    *(.wps.data*)
-    *(.websocket.data*)
     __data_end__ = .;
  	. = ALIGN(4);
    	__ram_image2_text_end__ = .;    
@@ -217,12 +175,6 @@ SECTIONS
     *(.fwu.data*)
     *(.bss*)
     *(COMMON)
-    *(.sdram.bss*)
-    *(.p2p.bss*)
-    *(.wps.bss*)
-    *(.websocket.bss*)
-    *(.uvc.ram.bss*)
-    *(.sdram.ssl_ram_map*)
     *(.ssl_ram_map*)
     *mem.o (.bss) 
     *memp.o (.bss)  
@@ -235,8 +187,6 @@ SECTIONS
   .bf_data : /* test */
   {
     __buffer_data_start__ = .;
-    *(.sdram*)
-    *(.data*)
     __buffer_data_end__ = .;
     
   } > BD_RAM
@@ -248,6 +198,38 @@ SECTIONS
     KEEP(*(.sram.heap*)) /* ucHeap */
   } > BD_RAM
   __ram_heap2_end__ = 0x10070000;
+
+
+  .sdr_rodata :
+  {
+	*(.sdram.rodata*) 
+    *(.p2p.rodata*)
+    *(.wps.rodata*)
+    *(.websocket.rodata*)
+  } > SDRAM_RAM
+
+  .sdr_data : 
+  {
+	*(.sdram.data*) 
+    *(.p2p.data*)
+    *(.wps.data*)
+    *(.websocket.data*)
+    __sdram_data_end__ = .;
+  } > SDRAM_RAM
+
+  .sdr_bss :
+  {
+    __sdram_bss_start__ = .;
+	*(.sdram.bss*)
+    *(.p2p.bss*)
+    *(.wps.bss*)
+    *(.websocket.bss*)
+	*(.uvc.ram.bss)
+    __sdram_bss_end__ = .;
+    . = ALIGN(8);
+  	__sdram_heap_start__ = .;
+  } > SDRAM_RAM
+  __sdram_heap_end__ = 0x30200000;
 
 	.boot.head :
 	{

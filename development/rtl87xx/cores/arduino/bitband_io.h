@@ -1,6 +1,10 @@
 #ifndef _BITBAND_IO_H_
 #define _BITBAND_IO_H_
 
+#ifdef __cplusplus
+extern "C"{
+#endif // __cplusplus
+
 #include "PinNames.h"
 #include "hal_platform.h"
 #include "hal_api.h"
@@ -149,5 +153,9 @@ volatile uint8_t * BitBandPeriAddr(void *addr, uint8_t bit);
 volatile uint8_t * GetOutPinBitBandAddr(PinName pin);
 volatile uint8_t * GetInPinBitBandAddr(PinName pin);
 volatile uint8_t * HardSetPin(PinName pin, HAL_GPIO_PIN_MODE pmode, uint8_t val);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus
 
 #endif // _BITBAND_IO_H_

@@ -1,0 +1,42 @@
+/**** from lib_mdns.a ****/
+*DNSCommon.o(.bss*)
+*dnssd_clientlib.o(.bss*)
+*dnssd_clientshim.o(.bss*)
+*mDNS.o(.bss*)
+*mDNSMain.o(.bss*)
+*mDNSPosix.o(.bss*)
+*mDNSPosixOverwrite.o(.bss*)
+*posix.o(.bss*) 
+
+/**** from lib_uvc.a ****/
+*v4l2-dev.o(.bss*)
+*v4l2-device.o(.bss*)
+*v4l2-fh.o(.bss*)
+*v4l2_driver.o(.bss*)
+*v4l2_intf.o(.bss*)
+*videobuf2-core.o(.bss*)
+*uvc_ctrl.o(.bss*)
+*uvc_driver.o(.bss*)
+*uvc_intf.o(.bss*)
+*uvc_queue.o(.bss*)
+*uvc_v4l2.o(.bss*)
+*uvc_video.o(.bss*)
+
+/**** from lib_usb_otg_linux.a ***
+*dwc_common_os.o(.bss*)
+*dwc_otg_hcd_os.o(.bss*) */
+
+/**** from lib_usb_drv.a ****/
+*usb.o(.bss*) 
+
+/**** from lib_usb_otg.a ****/
+*dwc_os.o(.bss*)
+*dwc_otg_cil.o(.bss*)
+*dwc_otg_cil_intr.o(.bss*)
+*dwc_otg_common.o(.bss*)
+*dwc_otg_dbg.o(.bss*)
+*dwc_otg_driver.o(.bss*)
+*dwc_otg_hcd.o(.bss*)
+*dwc_otg_hcd_ddma.o(.bss*)
+*dwc_otg_hcd_intr.o(.bss*)
+*dwc_otg_hcd_queue.o(.bss*) 

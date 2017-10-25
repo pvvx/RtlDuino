@@ -17,6 +17,7 @@ void setup() {
 
 void loop() {
     for(int i = 0; i < TOTAL_GPIO_PIN_NUM; i++) {
+      pinMode(i, OUTPUT);
       digitalWrite(i, HIGH);
       digitalWrite(i, LOW);
     }

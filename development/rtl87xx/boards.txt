@@ -38,6 +38,10 @@ rtlmodule_rtl8710.menu.upload_method.networkota=Network OTA
 rtlmodule_rtl8710.menu.upload_method.networkota.upload.protocol=network
 rtlmodule_rtl8710.menu.upload_method.networkota.upload.tool=network
 
+rtlmodule_rtl8710.menu.upload_method.dapimg=DAP-Link IMG
+rtlmodule_rtl8710.menu.upload_method.dapimg.upload.protocol=dapimg
+rtlmodule_rtl8710.menu.upload_method.dapimg.upload.tool=dapimg
+
 
 rtlmodule_rtl8711am.name=F11AMIM13 (RTL8711AM)
 rtlmodule_rtl8711am.vid.0=0x2341
@@ -59,6 +63,10 @@ rtlmodule_rtl8711am.build.ldscript=linker_scripts/gcc/rtl8711am-symbol-v04-img2_
 rtlmodule_rtl8710.build.sym_bklist=linker_scripts/gcc/symbol_black_list.txt
 rtlmodule_rtl8711am.build.variant=rtl8711am
 
+rtlmodule_rtl8711am.menu.upload_method.jlinkram=JLink RAM+SDRAM
+rtlmodule_rtl8711am.upload_method.jlinkram.upload.protocol=jlinkam
+rtlmodule_rtl8711am.upload_method.jlinkram.upload.tool=jlinkam
+
 rtlmodule_rtl8711am.menu.upload_method.jlgdbimg=JLink IMG
 rtlmodule_rtl8711am.menu.upload_method.jlgdbimg.upload.protocol=jlgdbimg
 rtlmodule_rtl8711am.menu.upload_method.jlgdbimg.upload.tool=jlgdbimg
@@ -70,3 +78,45 @@ rtlmodule_rtl8711am.menu.upload_method.jlgdbota.upload.tool=jlgdbota
 rtlmodule_rtl8711am.menu.upload_method.networkota=Network OTA
 rtlmodule_rtl8711am.menu.upload_method.networkota.upload.protocol=network
 rtlmodule_rtl8711am.menu.upload_method.networkota.upload.tool=network
+
+rtlmodule_rtl8711am.menu.upload_method.dapimg=DAP-Link IMG
+rtlmodule_rtl8711am.menu.upload_method.dapimg.upload.protocol=dapimg
+rtlmodule_rtl8711am.menu.upload_method.dapimg.upload.tool=dapimg
+
+
+rtlmodule_rtl8195.name=RTL8195
+rtlmodule_rtl8195.vid.0=0x2341
+rtlmodule_rtl8195.pid.0=0x003d
+rtlmodule_rtl8195.upload.tool=jlink
+rtlmodule_rtl8195.upload.protocol=jlink
+rtlmodule_rtl8195.upload.maximum_size=2499639
+rtlmodule_rtl8195.upload.wait_for_upload_port=false
+rtlmodule_rtl8195.upload.native_usb=false
+rtlmodule_rtl8195.build.mcu=cortex-m3
+rtlmodule_rtl8195.build.f_cpu=166666666L
+rtlmodule_rtl8195.build.board=rtlmodule
+rtlmodule_rtl8195.build.core=arduino
+rtlmodule_rtl8195.build.extra_flags=-mthumb -DBOARD_RTL8195A
+rtlmodule_rtl8195.build.ldscript=linker_scripts/gcc/rtl8195-symbol-v04-img3.ld
+rtlmodule_rtl8195.build.sym_bklist=linker_scripts/gcc/symbol_black_list.txt
+rtlmodule_rtl8195.build.variant=rtl8195
+
+rtlmodule_rtl8195.menu.upload_method.jlinkram=JLink RAM+SDRAM
+rtlmodule_rtl8195.menu.upload_method.jlinkram.upload.protocol=jlinkam
+rtlmodule_rtl8195.menu.upload_method.jlinkram.upload.tool=jlinkam
+
+rtlmodule_rtl8195.menu.upload_method.jlgdbimg=JLink IMG
+rtlmodule_rtl8195.menu.upload_method.jlgdbimg.upload.protocol=jlgdbimg
+rtlmodule_rtl8195.menu.upload_method.jlgdbimg.upload.tool=jlgdbimg
+
+rtlmodule_rtl8195.menu.upload_method.jlgdbota=JLink OTA
+rtlmodule_rtl8195.menu.upload_method.jlgdbota.upload.protocol=jlgdbota
+rtlmodule_rtl8195.menu.upload_method.jlgdbota.upload.tool=jlgdbota
+
+rtlmodule_rtl8195.menu.upload_method.networkota=Network OTA
+rtlmodule_rtl8195.menu.upload_method.networkota.upload.protocol=network
+rtlmodule_rtl8195.menu.upload_method.networkota.upload.tool=network
+
+rtlmodule_rtl8195.menu.upload_method.dapimg=DAP-Link IMG
+rtlmodule_rtl8195.menu.upload_method.dapimg.upload.protocol=dapimg
+rtlmodule_rtl8195.menu.upload_method.dapimg.upload.tool=dapimg

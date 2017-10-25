@@ -23,7 +23,7 @@ extern "C" {
 #define CRC_ENA
 
 #define DEFAULT_RES // Only 14-bit Temp / 12-bit RH 
-//#define FOST02 // Else SHTxxx
+#define FOST02 // Else SHTxxx
 
 
 // Clock pulse timing macros

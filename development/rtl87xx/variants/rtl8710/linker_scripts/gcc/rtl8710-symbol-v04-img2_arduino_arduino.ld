@@ -181,7 +181,6 @@ SECTIONS
     *(.p2p.bss*)
     *(.wps.bss*)
     *(.websocket.bss*)
-    *(.uvc.ram.bss*)
     *(.sdram.ssl_ram_map*)
     *(.ssl_ram_map*)
     *mem.o (.bss) 
@@ -226,6 +225,7 @@ SECTIONS
   .sdr_bss :
   {
     __sdram_bss_start__ = .;
+	*(.uvc.ram.bss)
     __sdram_bss_end__ = .;
     . = ALIGN(8);
   	__sdram_heap_start__ = .;

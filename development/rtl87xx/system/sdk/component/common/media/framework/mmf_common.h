@@ -62,6 +62,7 @@
 #define FMT_V_MJPG			0x00
 #define FMT_V_H264			0x01
 #define FMT_V_MP4V_ES		0x02
+#define FMT_V_YUYV			0x03
 #define FMT_A_PCMU			0x10
 #define FMT_A_PCMA			0x11
 #define FMT_A_MP4A_LATM		0x12

@@ -6,9 +6,9 @@
 * https://esp8266.ru/forum/threads/rtl00-mp3-player.1697/
 * 2016/10, RTL8710: kissste, pvvx
 */
-#if defined(BOARD_RTL8710) || defined(BOARD_RTL8711AM)
+#if defined(BOARD_RTL8710) || defined(BOARD_RTL8711AM) || defined(BOARD_RTL8195A)
 #else
-#error "Only RTL8710 and RTL8711AM!"
+#error "No Ameba Board!"
 #endif
 
 #include "Arduino.h"

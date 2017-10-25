@@ -110,9 +110,13 @@ bool isSpiffsFilenameValid(const char* name)
 
 // these symbols should be defined in the linker script for each flash layout
 #ifdef ARDUINO
-
+#if 1
 #define SPIFFS_PHYS_ADDR ((uint32_t) 0x00DE000)
 #define SPIFFS_PHYS_SIZE ((uint32_t) 0x0010000)
+#else
+#define SPIFFS_PHYS_ADDR ((uint32_t) 0x0100000)
+#define SPIFFS_PHYS_SIZE ((uint32_t) 0x0100000)
+#endif
 #define SPIFFS_PHYS_PAGE ((uint32_t) 0x100)
 #define SPIFFS_PHYS_BLOCK ((uint32_t) 0x1000)
 #define SPIFFS_MAX_OPEN_FILES 5
