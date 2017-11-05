@@ -140,7 +140,7 @@ char *SdFatFs::getRootPath() {
     }
 }
 
-int SdFatFs::readDir(char *path, char *result_buf, unsigned int bufsize) {
+int SdFatFs::readDir(const char *path, char *result_buf, unsigned int bufsize) {
     FRESULT ret = FR_OK;
     FILINFO fno;
     DIR dir;
@@ -204,7 +204,7 @@ int SdFatFs::readDir(char *path, char *result_buf, unsigned int bufsize) {
     
 }
 
-int SdFatFs::mkdir(char *absolute_path) {
+int SdFatFs::mkdir(const char *absolute_path) {
     FRESULT ret = FR_OK;
 
     do {
@@ -222,7 +222,7 @@ int SdFatFs::mkdir(char *absolute_path) {
     return ret;
 }
 
-int SdFatFs::rm(char *absolute_path) {
+int SdFatFs::rm(const char *absolute_path) {
     FRESULT ret = FR_OK;
 
     do {
@@ -240,7 +240,7 @@ int SdFatFs::rm(char *absolute_path) {
     return ret;
 }
 
-unsigned char SdFatFs::isDir(char *absolute_path) {
+unsigned char SdFatFs::isDir(const char *absolute_path) {
     unsigned char attr;
     if ( getAttribute(absolute_path, &attr) >= 0) {
         if (attr & AM_DIR) {
@@ -250,7 +250,7 @@ unsigned char SdFatFs::isDir(char *absolute_path) {
     return 0;
 }
 
-unsigned char SdFatFs::isFile(char *absolute_path) {
+unsigned char SdFatFs::isFile(const char *absolute_path) {
     unsigned char attr;
     if ( getAttribute(absolute_path, &attr) >= 0) {
         if (attr & AM_ARC) {
@@ -260,7 +260,7 @@ unsigned char SdFatFs::isFile(char *absolute_path) {
     return 0;
 }
 
-SdFatFile SdFatFs::open(char *absolute_path) {
+SdFatFile SdFatFs::open(const char *absolute_path) {
     FRESULT ret = FR_OK;
     SdFatFile file;
 
@@ -298,7 +298,7 @@ int SdFatFs::status() {
     return sdio_sd_status() == 4;
 }
 
-int SdFatFs::getLastModTime(char *absolute_path, uint16_t *year, uint16_t *month, uint16_t *date, uint16_t *hour, uint16_t *minute, uint16_t *second) {
+int SdFatFs::getLastModTime(const char *absolute_path, uint16_t *year, uint16_t *month, uint16_t *date, uint16_t *hour, uint16_t *minute, uint16_t *second) {
     FRESULT ret = FR_OK;
 
     FILINFO fno;
@@ -331,7 +331,7 @@ int SdFatFs::getLastModTime(char *absolute_path, uint16_t *year, uint16_t *month
     return -ret;    
 }
 
-int SdFatFs::setLastModTime(char *absolute_path, uint16_t year, uint16_t month, uint16_t date, uint16_t hour, uint16_t minute, uint16_t second) {
+int SdFatFs::setLastModTime(const char *absolute_path, uint16_t year, uint16_t month, uint16_t date, uint16_t hour, uint16_t minute, uint16_t second) {
     FRESULT ret = FR_OK;
     FILINFO fno;
 #if _USE_LFN
@@ -359,7 +359,7 @@ int SdFatFs::setLastModTime(char *absolute_path, uint16_t year, uint16_t month, 
     return -ret;    
 }
 
-int SdFatFs::getAttribute(char *absolute_path, unsigned char *attr) {
+int SdFatFs::getAttribute(const char *absolute_path, unsigned char *attr) {
     FRESULT ret = FR_OK;
     FILINFO fno;
 #if _USE_LFN
@@ -385,7 +385,7 @@ int SdFatFs::getAttribute(char *absolute_path, unsigned char *attr) {
     return -ret;
 }
 
-int SdFatFs::getFsize(char *absolute_path, uint32_t *size, unsigned char *attr) {
+int SdFatFs::getFsize(const char *absolute_path, uint32_t *size, unsigned char *attr) {
     FRESULT ret = FR_OK;
     FILINFO fno;
 #if _USE_LFN
@@ -409,7 +409,7 @@ int SdFatFs::getFsize(char *absolute_path, uint32_t *size, unsigned char *attr) 
     return -ret;
 }
 
-int SdFatFs::getLabel(char *absolute_path, char *bufname, uint32_t *svn) {
+int SdFatFs::getLabel(const char *absolute_path, char *bufname, uint32_t *svn) {
     FRESULT ret = FR_OK;
     
     do {
