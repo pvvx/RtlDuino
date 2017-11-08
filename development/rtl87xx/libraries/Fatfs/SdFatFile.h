@@ -110,6 +110,13 @@ public:
      */
     int close();
 
+    /**
+     * @brief Get file size
+     *
+     * @return file size in bytes
+    */
+    size_t size();
+
     friend class SdFatFs;
 
 private:

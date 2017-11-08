@@ -109,6 +109,10 @@ int SdFatFile::readline(void *buf, uint16_t nbyte) {
 }
 
 
+size_t SdFatFile::size(){
+    
+    return f_size((FIL *)m_file);
+}
 
 
 int SdFatFile::seek(uint32_t pos) {
