@@ -10,6 +10,7 @@ extern "C" {
 #include "WiFiClient.h"
 #include "WiFiServer.h"
 #include "server_drv.h"
+#include <Arduino.h>
 
 WiFiClient::~WiFiClient() {
 		stop();
@@ -28,6 +29,25 @@ WiFiClient::WiFiClient(uint8_t sock) {
         _is_connected = true;
     recvTimeout = 3000;
 }
+
+WiFiClient::WiFiClient(const WiFiClient& other)
+{
+    _sock = other._sock;
+    _is_connected = other._is_connected;
+    recvTimeout = other.recvTimeout;
+    other._sock = -1;
+}
+
+WiFiClient& WiFiClient::operator=(const WiFiClient& other)
+{
+    _sock = other._sock;
+    _is_connected = other._is_connected;
+    recvTimeout = other.recvTimeout;
+    other._sock = -1;
+    return *this;
+}
+
+
 
 uint8_t WiFiClient::connected() {
   	if (_sock < 0 || _sock == 0xFF) {
@@ -52,7 +72,7 @@ int WiFiClient::available() {
 		return 0;
     }
   	if (_sock >= 0)
-  	{	
+  	{
       	ret = clientdrv.availData(_sock);
         if (ret > 0) {
             return 1;
@@ -70,9 +90,11 @@ int WiFiClient::read() {
     int ret;
     int err;
   	uint8_t b[1];
-	
-  	if (!available())
-    	return -1;
+    //printf("WiFiClient::read()\n" );
+  	if (!available()){
+      //  printf(">>> not available\n" );
+      return -1;
+    }
 
     ret = clientdrv.getData(_sock, b);
     if (ret > 0) {
@@ -105,10 +127,10 @@ int WiFiClient::read(uint8_t* buf, size_t size) {
 void WiFiClient::stop() {
 
   	if (_sock < 0) 	return;
-  	
+
   	clientdrv.stopClient(_sock);
-	_is_connected = false;
-	
+	  _is_connected = false;
+
   	_sock = -1;
 }
 
@@ -134,7 +156,7 @@ size_t WiFiClient::write(const uint8_t *buf, size_t size) {
 		_is_connected = false;
       	return 0;
   	}
-	
+
   	return size;
 }
 
@@ -144,7 +166,7 @@ WiFiClient::operator bool() {
 
 int WiFiClient::connect(const char* host, uint16_t port) {
 	IPAddress remote_addr;
-	
+
 	if (WiFi.hostByName(host, remote_addr))
 	{
 		return connect(remote_addr, port);
