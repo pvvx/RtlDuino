@@ -103,6 +103,13 @@ String PadiWebServer::_exractParam(String& authReq,const String& param,const cha
 }
 /*
 bool PadiWebServer::authenticate(const char * username, const char * password){
+
+//#include "hal_crypto.h"
+//if ( rtl_cryptoEngine_init() != 0 ) {
+//                DiagPrintf("crypto engine init failed\r\n");
+//        }
+//  ret = rtl_crypto_md5(plaintext, strlen(plaintext), (unsigned char *)&digest); // the length of MD5's digest is 16 bytes.     
+
   if(hasHeader(AUTHORIZATION_HEADER)){
     String authReq = header(AUTHORIZATION_HEADER);
     if(authReq.startsWith("Basic")){
