@@ -13,6 +13,7 @@ rtlmodule_rtl8710.upload.maximum_size=1048576
 rtlmodule_rtl8710.upload.wait_for_upload_port=false
 rtlmodule_rtl8710.upload.native_usb=false
 rtlmodule_rtl8710.build.mcu=cortex-m3
+#rtlmodule_rtl8710.build.f_cpu=166666666L
 rtlmodule_rtl8710.build.f_cpu=166666666L
 #rtlmodule_rtl8710.build.usb_product="Module RTL8710"
 rtlmodule_rtl8710.build.board=rtlmodule

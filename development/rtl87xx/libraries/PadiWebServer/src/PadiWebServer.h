@@ -129,6 +129,10 @@ public:
   static String urlDecode(const String& text);
 
 template<typename T> size_t streamFile(T &file, const String& contentType,  const String& fileName){
+
+  char buffer[2048];
+  size_t size = 0;
+  int readLen;
   setContentLength(file.size());
   if (fileName.endsWith(".gz") &&
       contentType != "application/x-gzip" &&
@@ -136,7 +140,18 @@ template<typename T> size_t streamFile(T &file, const String& contentType,  cons
     sendHeader("Content-Encoding", "gzip");
   }
   send(200, contentType, "");
-  return _currentClient.write(file);
+  /*write file with 1024 byte buffer*/
+  while(true){
+    readLen = file.read(buffer,sizeof(buffer));
+    if (readLen){
+      size += readLen;
+      _currentClient.write(buffer,readLen);
+    }
+    else{
+      break;
+    }
+  }
+  return size;
 }
 
 protected:
