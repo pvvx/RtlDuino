@@ -19,29 +19,29 @@ char RDBuf[TEST_SIZE];
 
 int sdioInitErr = FR_OK;
 
-#if defined(BOARD_RTL8710) 
+#if defined(BOARD_RTL8710)
 
 extern "C" unsigned short GPIOState[];
 extern "C" void HalPinCtrlRtl8195A(int,int,int);
 
 void SdFatFs::WP_Off() {
 		pin_mode(PA_7, PullDown);
-}    	
+}
 
 void SdFatFs::WP_On() {
 		pin_mode(PA_7, PullDown);
-}    	
+}
 
 void SdFatFs::InsertSD() {
 		pin_mode(PA_6, PullDown);
 		delay(2);
-}    	
+}
 
 void SdFatFs::RemoveSD()
 {
 		pin_mode(PA_6, PullUp);
 }
-#endif    
+#endif
 
 SdFatFs::SdFatFs() {
     m_fs = NULL;
@@ -53,7 +53,7 @@ SdFatFs::SdFatFs() {
 
     if(sdio_sd_init() != 0){
     	printf("SDIO host init fail.\n");
-    	sdioInitErr = FR_DISK_ERR;      
+    	sdioInitErr = FR_DISK_ERR;
     }
     else {
 	    if(sdio_sd_status() >=0) {
@@ -185,7 +185,7 @@ int SdFatFs::readDir(const char *path, char *result_buf, unsigned int bufsize) {
             {
                 fn = fno.fname;
                 fnlen = fno.fsize;
-            }            
+            }
 
             bufidx += sprintf(result_buf + bufidx, "%s", fn);
             bufidx++;
@@ -196,12 +196,12 @@ int SdFatFs::readDir(const char *path, char *result_buf, unsigned int bufsize) {
                     bufidx++;
                 }
             }
-*/            
+*/
         }
     } while (0);
 
     return -ret;
-    
+
 }
 
 int SdFatFs::mkdir(const char *absolute_path) {
@@ -260,9 +260,40 @@ unsigned char SdFatFs::isFile(const char *absolute_path) {
     return 0;
 }
 
-SdFatFile SdFatFs::open(const char *absolute_path) {
+SdFatFile SdFatFs::open(const char *absolute_path, const char* mode) {
     FRESULT ret = FR_OK;
     SdFatFile file;
+		unsigned char seekEnd = 0;
+		unsigned char flags = FA_READ;
+
+			do{
+				if (strcmp(mode,"r") == 0 ){
+					flags = FA_READ;
+					break;
+				}
+				if (strcmp(mode,"r+") == 0 ){
+					flags = FA_READ | FA_WRITE;
+					break;
+				}
+				if (strcmp(mode,"w") == 0 ){
+					flags = FA_CREATE_ALWAYS | FA_WRITE;
+					break;
+				}
+				if (strcmp(mode,"w+") == 0 ){
+					flags = FA_CREATE_ALWAYS | FA_WRITE | FA_READ;
+					break;
+				}
+				if (strcmp(mode,"a") == 0 ){
+					flags = FA_OPEN_ALWAYS | FA_WRITE;
+					seekEnd = 1;
+					break;
+				}
+				if (strcmp(mode,"a+") == 0 ){
+					flags = FA_OPEN_ALWAYS | FA_WRITE | FA_READ;
+					seekEnd = 1;
+					break;
+				}
+		}while(0);
 
     do {
         if (drv_num < 0) {
@@ -276,12 +307,15 @@ SdFatFile SdFatFs::open(const char *absolute_path) {
             break;
         }
 
-        ret = f_open((FIL *)file.m_file, absolute_path, FA_OPEN_ALWAYS | FA_READ | FA_WRITE);
+        ret = f_open((FIL *)file.m_file, absolute_path, flags);
 
         if (ret != FR_OK) {
             printf("open file (%s) fail. (ret=%d)\n", absolute_path, ret);
             break;
         }
+				if(seekEnd){
+					file.seek( file.size() - 1);
+				}
     } while (0);
 
     if (ret != FR_OK) {
@@ -328,7 +362,7 @@ int SdFatFs::getLastModTime(const char *absolute_path, uint16_t *year, uint16_t 
 
     } while (0);
 
-    return -ret;    
+    return -ret;
 }
 
 int SdFatFs::setLastModTime(const char *absolute_path, uint16_t year, uint16_t month, uint16_t date, uint16_t hour, uint16_t minute, uint16_t second) {
@@ -356,7 +390,7 @@ int SdFatFs::setLastModTime(const char *absolute_path, uint16_t year, uint16_t m
         }
     } while (0);
 
-    return -ret;    
+    return -ret;
 }
 
 int SdFatFs::getAttribute(const char *absolute_path, unsigned char *attr) {
@@ -411,7 +445,7 @@ int SdFatFs::getFsize(const char *absolute_path, uint32_t *size, unsigned char *
 
 int SdFatFs::getLabel(const char *absolute_path, char *bufname, uint32_t *svn) {
     FRESULT ret = FR_OK;
-    
+
     do {
         if (drv_num < 0) {
             ret = FR_DISK_ERR;
@@ -428,4 +462,3 @@ int SdFatFs::getLabel(const char *absolute_path, char *bufname, uint32_t *svn) {
 char SdFatFs::getCSD(unsigned char * csd_data) {
 	return sdio_sd_getCSD(csd_data);
 }
-

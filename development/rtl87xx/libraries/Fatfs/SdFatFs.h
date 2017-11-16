@@ -20,8 +20,8 @@
 #define ATTR_ARC	0x20	/* Archive */
 #define ATTR_MASK	0x3F	/* Mask of defined bits */
 
-/** 
- * @class SdFatFs SdFatFs.h 
+/**
+ * @class SdFatFs SdFatFs.h
  * @brief SD FAT File system
  */
 class SdFatFs
@@ -47,7 +47,7 @@ public:
      * @brief Deinitialize SD FAT File System
      */
     int end();
-#if defined(BOARD_RTL8710) 
+#if defined(BOARD_RTL8710)
 	void WP_Off();
 	void WP_On();
 	void InsertSD();
@@ -125,15 +125,15 @@ public:
     int getFsize(const char *absolute_path, uint32_t *size, unsigned char *attr = NULL);
 
     /* SD CSD size 16 bytes */
-    char getCSD(unsigned char * csd_data); 
-    
-    /*  Get volume label 
+    char getCSD(unsigned char * csd_data);
+
+    /*  Get volume label
     * @param[in] absolute_path The absolute path to be changed
-    * @param[in] bufname  Pointer to a buffer to return the volume label 
-    * @param[in] svn Pointer to a variable to return the volume serial number 
+    * @param[in] bufname  Pointer to a buffer to return the volume label
+    * @param[in] svn Pointer to a variable to return the volume serial number
     * @return Return 0 if success. Return negativate value for a failure.
     */
-    
+
     int getLabel(const char *absolute_path, char *bufname, uint32_t *svn);
 
 
@@ -157,9 +157,10 @@ public:
      * @brief Open a file
      *
      * @param[in] absolute_path the path to a file
+     * @param mode like posix r,r+,w,w+,a,a+
      * @return The file object which is instance of SdFatFile
      */
-    SdFatFile open(const char *absolute_path);
+    SdFatFile open(const char *absolute_path, const char* mode = "r");
 
     /**
      * @brief Return current status of SD
