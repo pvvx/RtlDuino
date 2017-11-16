@@ -8,8 +8,10 @@ static const struct {const char endsWith[16]; const char mimeType[32];} mimeTabl
     { ".html", "text/html" },
     { ".htm", "text/html" },
     { ".css", "text/css" },
+    { ".css.gz", "text/css" },
     { ".txt", "text/plain" },
     { ".js", "application/javascript" },
+    { ".js.gz", "application/javascript" },
     { ".json", "application/json" },
     { ".png", "image/png" },
     { ".gif", "image/gif" },
@@ -79,7 +81,22 @@ protected:
     HTTPMethod _method;
 };
 
-class StaticRequestHandler : public RequestHandler {
+static String getContentType(const String& path) {
+    // Check all entries but last one for match, return if found
+    for (size_t i=0; i < sizeof(mimeTable)/sizeof(mimeTable[0])-1; i++) {
+        if (path.endsWith(mimeTable[i].endsWith)) {
+            return String(mimeTable[i].mimeType);
+        }
+    }
+
+    return String(mimeTable[sizeof(mimeTable)/sizeof(mimeTable[0])-1].mimeType);
+}
+
+
+
+
+
+/*class StaticRequestHandler : public RequestHandler {
 public:
     StaticRequestHandler(SdFatFs& fs, const char* path, const char* uri, const char* cache_header)
     : _fs(fs)
@@ -145,15 +162,12 @@ public:
         char buff[sizeof(mimeTable[0].mimeType)];
         // Check all entries but last one for match, return if found
         for (size_t i=0; i < sizeof(mimeTable)/sizeof(mimeTable[0])-1; i++) {
-            strcpy_P(buff, mimeTable[i].endsWith);
-            if (path.endsWith(buff)) {
-                strcpy_P(buff, mimeTable[i].mimeType);
-                return String(buff);
+            if (path.endsWith(mimeTable[i].endsWith)) {
+                return String(mimeTable[i].mimeType);
             }
         }
-        // Fall-through and just return default type
-        strcpy_P(buff, mimeTable[sizeof(mimeTable)/sizeof(mimeTable[0])-1].mimeType);
-        return String(buff);
+
+        return String(mimeTable[sizeof(mimeTable)/sizeof(mimeTable[0])-1].mimeType);
     }
 
 protected:
@@ -163,7 +177,8 @@ protected:
     String _cache_header;
     bool _isFile;
     size_t _baseUriLength;
-};
+};*/
+
 
 
 #endif //REQUESTHANDLERSIMPL_H

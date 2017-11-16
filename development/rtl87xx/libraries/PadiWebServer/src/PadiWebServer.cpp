@@ -108,7 +108,7 @@ bool PadiWebServer::authenticate(const char * username, const char * password){
 //if ( rtl_cryptoEngine_init() != 0 ) {
 //                DiagPrintf("crypto engine init failed\r\n");
 //        }
-//  ret = rtl_crypto_md5(plaintext, strlen(plaintext), (unsigned char *)&digest); // the length of MD5's digest is 16 bytes.     
+//  ret = rtl_crypto_md5(plaintext, strlen(plaintext), (unsigned char *)&digest); // the length of MD5's digest is 16 bytes.
 
   if(hasHeader(AUTHORIZATION_HEADER)){
     String authReq = header(AUTHORIZATION_HEADER);
@@ -264,9 +264,54 @@ void PadiWebServer::_addRequestHandler(RequestHandler* handler) {
       _lastHandler = handler;
     }
 }
-
+/*
 void PadiWebServer::serveStatic(const char* uri, SdFatFs& fs, const char* path, const char* cache_header) {
     _addRequestHandler(new StaticRequestHandler(fs, path, uri, cache_header));
+}*/
+char PadiWebServer::serveStatic(SdFatFs& fs, String path){
+
+      if (this->method() !=  HTTP_GET){
+            return false;
+      }
+
+      path += this->uri();
+
+      if (this->uri().endsWith("/")) path += "index.html";
+      //check if file exists
+      if (fs.isFile(path.c_str()) != 1){
+        return -1;
+      }
+
+      String contentType(getContentType(path));
+
+      SdFatFile file = fs.open(path.c_str(),"r");
+      return this->streamFile(file,contentType,path);
+}
+
+size_t PadiWebServer::streamFile(SdFatFile &file, const String& contentType,  const String& fileName){
+
+      char buffer[2048];
+      size_t size = 0;
+      int readLen;
+      setContentLength(file.size());
+      if (fileName.endsWith(".gz") &&
+          contentType != "application/x-gzip" &&
+          contentType != "application/octet-stream"){
+        sendHeader("Content-Encoding", "gzip");
+      }
+      send(200, contentType, "");
+      /*write file with 1024 byte buffer*/
+      while(true){
+        readLen = file.read(buffer,sizeof(buffer));
+        if (readLen){
+          size += readLen;
+          _currentClient.write(buffer,readLen);
+        }
+        else{
+          break;
+        }
+      }
+      return size;
 }
 
 void PadiWebServer::handleClient() {
