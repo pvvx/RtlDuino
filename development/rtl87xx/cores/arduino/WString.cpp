@@ -31,7 +31,13 @@
 String::String(const char *cstr)
 {
 	init();
-	if (cstr) copy(cstr, strlen(cstr));
+	if (cstr) copy(cstr, strlen(cstr) );
+}
+
+String::String(const char *cstr, unsigned int size)
+{
+	init();
+	if (cstr) copy(cstr, size);
 }
 
 String::String(const String &value)
@@ -177,7 +183,8 @@ String & String::copy(const char *cstr, unsigned int length)
 		return *this;
 	}
 	len = length;
-	strcpy(buffer, cstr);
+	memcpy(buffer, cstr, length);
+	buffer[len] = '\0';
 	return *this;
 }
 
@@ -188,7 +195,8 @@ String & String::copy(const __FlashStringHelper *pstr, unsigned int length)
 		return *this;
 	}
 	len = length;
-	strcpy_P(buffer, (PGM_P)pstr);
+	memcpy_P(buffer, (PGM_P)pstr, length);
+	buffer[len] = '\0';
 	return *this;
 }
 
@@ -197,9 +205,10 @@ void String::move(String &rhs)
 {
 	if (buffer) {
 		if (capacity >= rhs.len) {
-			strcpy(buffer, rhs.buffer);
+			memcpy(buffer, rhs.buffer, rhs.len);
 			len = rhs.len;
 			rhs.len = 0;
+			buffer[len] = '\0';
 			return;
 		} else {
 			free(buffer);
@@ -217,10 +226,11 @@ void String::move(String &rhs)
 String & String::operator = (const String &rhs)
 {
 	if (this == &rhs) return *this;
-	
-	if (rhs.buffer) copy(rhs.buffer, rhs.len);
-	else invalidate();
-	
+
+	if (rhs.buffer){
+		copy(rhs.buffer, rhs.len);
+	}else invalidate();
+
 	return *this;
 }
 
@@ -242,7 +252,7 @@ String & String::operator = (const char *cstr)
 {
 	if (cstr) copy(cstr, strlen(cstr));
 	else invalidate();
-	
+
 	return *this;
 }
 
@@ -269,8 +279,9 @@ unsigned char String::concat(const char *cstr, unsigned int length)
 	if (!cstr) return 0;
 	if (length == 0) return 1;
 	if (!reserve(newlen)) return 0;
-	strcpy(buffer + len, cstr);
+	memcpy(buffer + len, cstr, length);
 	len = newlen;
+	buffer[len] = '\0';
 	return 1;
 }
 
@@ -344,8 +355,9 @@ unsigned char String::concat(const __FlashStringHelper * str)
 	if (length == 0) return 1;
 	unsigned int newlen = len + length;
 	if (!reserve(newlen)) return 0;
-	strcpy_P(buffer + len, (const char *) str);
+	memcpy_P(buffer + len, (const char *) str, length);
 	len = newlen;
+	buffer[len] = '\0';
 	return 1;
 }
 
@@ -485,7 +497,7 @@ unsigned char String::equalsIgnoreCase( const String &s2 ) const
 	const char *p2 = s2.buffer;
 	while (*p1) {
 		if (tolower(*p1++) != tolower(*p2++)) return 0;
-	} 
+	}
 	return 1;
 }
 
@@ -516,7 +528,7 @@ char String::charAt(unsigned int loc) const
 	return operator[](loc);
 }
 
-void String::setCharAt(unsigned int loc, char c) 
+void String::setCharAt(unsigned int loc, char c)
 {
 	if (loc < len) buffer[loc] = c;
 }
@@ -625,7 +637,7 @@ String String::substring(unsigned int left, unsigned int right) const
 	if (left >= len) return out;
 	if (right > len) right = len;
 	char temp = buffer[right];  // save the replaced character
-	buffer[right] = '\0';	
+	buffer[right] = '\0';
 	out = buffer + left;  // pointer arithmetic
 	buffer[right] = temp;  //restore character
 	return out;
