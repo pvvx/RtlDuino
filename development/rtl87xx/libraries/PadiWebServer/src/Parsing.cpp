@@ -197,7 +197,7 @@ bool PadiWebServer::_parseRequest(WiFiClient& client) {
           //plain post json or other data
           RequestArgument& arg = _currentArgs[_currentArgCount++];
           arg.key = "plain";
-          arg.value = String(plainBuf);
+          arg.value = String(plainBuf,contentLength);
         }
 
   #ifdef DEBUG_ESP_HTTP_SERVER
