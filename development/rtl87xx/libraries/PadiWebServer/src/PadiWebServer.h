@@ -88,7 +88,7 @@ public:
   void on(const String &uri, HTTPMethod method, THandlerFunction fn);
   void on(const String &uri, HTTPMethod method, THandlerFunction fn, THandlerFunction ufn);
   void addHandler(RequestHandler* handler);
-  char serveStatic(SdFatFs& fs, String path);
+  int serveStatic(SdFatFs& fs, String path);
   //void serveStatic(const char* uri, SdFatFs& fs, const char* path, const char* cache_header = NULL );
   void onNotFound(THandlerFunction fn);  //called when handler is not assigned
   void onFileUpload(THandlerFunction fn); //handle file uploads

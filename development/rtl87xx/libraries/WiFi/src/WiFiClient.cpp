@@ -40,6 +40,7 @@ WiFiClient::WiFiClient(const WiFiClient& other)
 
 WiFiClient& WiFiClient::operator=(const WiFiClient& other)
 {
+    stop();
     _sock = other._sock;
     _is_connected = other._is_connected;
     recvTimeout = other.recvTimeout;

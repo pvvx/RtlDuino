@@ -268,10 +268,10 @@ void PadiWebServer::_addRequestHandler(RequestHandler* handler) {
 void PadiWebServer::serveStatic(const char* uri, SdFatFs& fs, const char* path, const char* cache_header) {
     _addRequestHandler(new StaticRequestHandler(fs, path, uri, cache_header));
 }*/
-char PadiWebServer::serveStatic(SdFatFs& fs, String path){
+int PadiWebServer::serveStatic(SdFatFs& fs, String path){
 
       if (this->method() !=  HTTP_GET){
-            return false;
+            return -1;
       }
 
       path += this->uri();
@@ -281,16 +281,23 @@ char PadiWebServer::serveStatic(SdFatFs& fs, String path){
       if (fs.isFile(path.c_str()) != 1){
         return -1;
       }
-
       String contentType(getContentType(path));
+      //check if gz version exists
+      if (fs.isFile(String(path + ".gz").c_str()) == 1){
+        path += ".gz";
+      }
+
+
 
       SdFatFile file = fs.open(path.c_str(),"r");
-      return this->streamFile(file,contentType,path);
+      int ret = this->streamFile(file,contentType,path);
+      file.close();
+      return ret;
 }
 
 size_t PadiWebServer::streamFile(SdFatFile &file, const String& contentType,  const String& fileName){
 
-      char buffer[2048];
+      char buffer[4096];
       size_t size = 0;
       int readLen;
       setContentLength(file.size());
@@ -436,8 +443,8 @@ void PadiWebServer::send(int code, const char* content_type, const String& conte
     //if(code == 200 && content.length() == 0 && _contentLength == CONTENT_LENGTH_NOT_SET)
     //  _contentLength = CONTENT_LENGTH_UNKNOWN;
     _prepareHeader(header, code, content_type, content.length());
-    _currentClient.write(header.c_str(), header.length());
-    if(content.length())
+    _currentClient.write(header.data(), header.size());
+    if(content.size())
       sendContent(content);
 }
 /*
@@ -475,7 +482,7 @@ void PadiWebServer::send(int code, const String& content_type, const String& con
 
 void PadiWebServer::sendContent(const String& content) {
   const char * footer = "\r\n";
-  size_t len = content.length();
+  size_t len = content.size();
   if(_chunked) {
     char * chunkSize = (char *)malloc(11);
     if(chunkSize){
@@ -484,7 +491,7 @@ void PadiWebServer::sendContent(const String& content) {
       free(chunkSize);
     }
   }
-  _currentClient.write(content.c_str(), len);
+  _currentClient.write(content.data(), len);
   if(_chunked){
     _currentClient.write(footer, 2);
   }
