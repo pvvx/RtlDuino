@@ -711,7 +711,7 @@ void String::remove(unsigned int index, unsigned int count){
 	if (count > len - index) { count = len - index; }
 	char *writeTo = buffer + index;
 	len = len - count;
-	strncpy(writeTo, buffer + index + count,len - index);
+	memcpy(writeTo, buffer + index + count,len - index);
 	buffer[len] = 0;
 }
 
@@ -740,7 +740,7 @@ void String::trim(void)
 	while (isspace(*end) && end >= begin) end--;
 	len = end + 1 - begin;
 	if (begin > buffer) memcpy(buffer, begin, len);
-	buffer[len] = 0;
+	buffer[len] = '\0';
 }
 
 /*********************************************/
