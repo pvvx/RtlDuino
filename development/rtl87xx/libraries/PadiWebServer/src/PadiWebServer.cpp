@@ -29,6 +29,8 @@
 //#include "FS.h"
 #include "SdFatFs.h"
 #include "detail/RequestHandlersImpl.h"
+#include "rtl_crypto.h"
+
 
 //#define DEBUG_ESP_HTTP_SERVER
 #ifdef DEBUG_ESP_PORT
@@ -101,7 +103,7 @@ String PadiWebServer::_exractParam(String& authReq,const String& param,const cha
   if (_begin==-1) return "";
   return authReq.substring(_begin+param.length(),authReq.indexOf(delimit,_begin+param.length()));
 }
-/*
+
 bool PadiWebServer::authenticate(const char * username, const char * password){
 
 //#include "hal_crypto.h"
@@ -167,39 +169,40 @@ bool PadiWebServer::authenticate(const char * username, const char * password){
         _nc = _exractParam(authReq,"nc=",',');
         _cnonce = _exractParam(authReq,"cnonce=\"");
       }
-      MD5Builder md5;
-      md5.begin();
-      md5.add(String(username)+":"+_realm+":"+String(password));  // md5 of the user:realm:user
-      md5.calculate();
-      String _H1 = md5.toString();
+      String buff;
+
+      buff += (String(username)+":"+_realm+":"+String(password));  // md5 of the user:realm:user
+
+      String _H1 = computeMD5(buff.data(),buff.size()).toString();
       #ifdef DEBUG_ESP_HTTP_SERVER
       DEBUG_OUTPUT.println("Hash of user:realm:pass=" + _H1);
       #endif
-      md5.begin();
+      buff = "";
       if(_currentMethod == HTTP_GET){
-        md5.add("GET:"+_uri);
+        buff += ("GET:"+_uri);
       }else if(_currentMethod == HTTP_POST){
-        md5.add("POST:"+_uri);
+        buff += ("POST:"+_uri);
       }else if(_currentMethod == HTTP_PUT){
-        md5.add("PUT:"+_uri);
+        buff += ("PUT:"+_uri);
       }else if(_currentMethod == HTTP_DELETE){
-        md5.add("DELETE:"+_uri);
+        buff += ("DELETE:"+_uri);
       }else{
-        md5.add("GET:"+_uri);
+        buff += ("GET:"+_uri);
       }
-      md5.calculate();
-      String _H2 = md5.toString();
+
+      String _H2 = computeMD5(buff.data(),buff.size()).toString();
       #ifdef DEBUG_ESP_HTTP_SERVER
       DEBUG_OUTPUT.println("Hash of GET:uri=" + _H2);
       #endif
-      md5.begin();
+      buff = "";
       if(authReq.indexOf("qop=auth") != -1){
-        md5.add(_H1+":"+_nonce+":"+_nc+":"+_cnonce+":auth:"+_H2);
+        buff += (_H1+":"+_nonce+":"+_nc+":"+_cnonce+":auth:"+_H2);
       }else{
-        md5.add(_H1+":"+_nonce+":"+_H2);
+        buff += (_H1+":"+_nonce+":"+_H2);
       }
-      md5.calculate();
-      String _responsecheck = md5.toString();
+
+      String _responsecheck = computeMD5(buff.data(),buff.size()).toString();
+
       #ifdef DEBUG_ESP_HTTP_SERVER
       DEBUG_OUTPUT.println("The Proper response=" +_responsecheck);
       #endif
@@ -214,11 +217,13 @@ bool PadiWebServer::authenticate(const char * username, const char * password){
 }
 
 String PadiWebServer::_getRandomHexString(){
+  unsigned char rnd[16];
   char buffer[33];  // buffer to hold 32 Hex Digit + /0
-  int i;
-  for(i=0;i<4;i++){
-    sprintf (buffer+(i*8), "%08x", RANDOM_REG32);
+  for (int i = 0; i< 16; ++i){
+    rnd[i] = random(255);
   }
+
+  renderHexdata(buffer,33,reinterpret_cast<uint8_t *>(rnd),16);
   return String(buffer);
 }
 
@@ -237,7 +242,7 @@ void PadiWebServer::requestAuthentication(HTTPAuthMethod mode, const char* realm
   }
   send(401,"text/html",authFailMsg);
 }
-*/
+
 void PadiWebServer::on(const String &uri, PadiWebServer::THandlerFunction handler) {
   on(uri, HTTP_ANY, handler);
 }
