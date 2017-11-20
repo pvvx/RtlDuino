@@ -8,7 +8,20 @@ Arduino module RTL00(RTL8710AF), [F11AMIM13](http://fn-link.en.made-in-china.com
 [MJIOT-AMB-01](http://www.nb-iot-tech.com/mjiot-amb-01-en.html) (RTL8710AF), [MJIOT-AMB-02](http://www.nb-iot-tech.com/mjiot-amb-02-en.html) (RTL8195AM), ...<br>
 
 ### Development Status
-Not everything is working yet, you can not get it through package manager, but you can give it a go and help us find bugs in the things that are implemented :)
+
+List of improvements/differences to https://github.com/pvvx/RtlDuino
+* Arduino **String** support binary data
+* Basic support RTL Cryptographics API (only MD5 at this time)
+* Ported HTTP server from ESP8266  https://github.com/esp8266/ESPWebServer
+  * Http auth uses hw MD5 calculation
+  * Server can receive and send binary data (application/octet-stream) for optimalization (more work can do in javascript client side) (original server not support this)
+  * Server has new method for serving static from documentroot from SD card
+  * In sending file try to find gz version and automatic choose this variant for minimalisation of data transfer
+* Some fixes Wifi library for new webserver
+* Improvement SDFat , u can open file with modes r,r+,w,w+,a,a+ (for write for append etc.)
+* Add option to flash RTL8710 via stlink and openocd (u must install openocd)
+
+
 
 ### Installation
 - Install Arduino IDE and Ameba (reference: http://www.amebaiot.com/ameba-arduino-getting-started/ )
