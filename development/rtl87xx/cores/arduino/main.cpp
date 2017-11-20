@@ -83,6 +83,7 @@ void Init_CPU_CLK_UART(int clkn, int baud)
 	 		HalCpuClkConfig(clkn);
 	 		*((int *)0x40000074) &= (~(1<<17));
 		}
+		HalDelayUs(1000);
 		HAL_LOG_UART_ADAPTER pUartAdapter;
 		pUartAdapter.BaudRate = baud;
 		HalLogUartSetBaudRate(&pUartAdapter);
@@ -97,7 +98,7 @@ void main_task( void const *arg )
 
     setup();
 
-/*    
+/*
 	 ConfigDebugErr  = -1;
 	 ConfigDebugInfo = ~_DBG_SPI_FLASH_;
 	 ConfigDebugWarn = -1;
@@ -120,7 +121,7 @@ void main_task( void const *arg )
 int main( void )
 {
 	UserPreInit();
-	
+
     init();
 
     initVariant();
@@ -128,9 +129,9 @@ int main( void )
 #if 0 // pvvx: add start info
     vPortFree(pvPortMalloc(4)); // Init RAM heap
 	sys_info();
-#endif 
+#endif
 
-    osThreadDef(main_task, osPriorityRealtime, 1, 4096*4); 
+    osThreadDef(main_task, osPriorityRealtime, 1, 4096*4);
     main_tid = osThreadCreate(osThread (main_task), NULL);
 
     osKernelStart();
@@ -143,4 +144,3 @@ int main( void )
 #ifdef __cplusplus
 }
 #endif
-

@@ -7,10 +7,12 @@
 class WiFiClient : public Client {
 
 public:
-	
+
   ~WiFiClient();
   WiFiClient();
   WiFiClient(uint8_t sock);
+	WiFiClient(const WiFiClient&);
+  WiFiClient& operator=(const WiFiClient&);
 
   uint8_t status();
   virtual int connect(IPAddress ip, uint16_t port);
@@ -36,7 +38,7 @@ public:
   int read(char *buf, size_t size);
 
 private:
-	int _sock;
+	mutable int _sock;
 	ServerDrv clientdrv;
 	bool _is_connected;
 	uint8_t data[DATA_LENTH];

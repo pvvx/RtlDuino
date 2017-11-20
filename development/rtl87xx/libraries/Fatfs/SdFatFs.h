@@ -20,8 +20,8 @@
 #define ATTR_ARC	0x20	/* Archive */
 #define ATTR_MASK	0x3F	/* Mask of defined bits */
 
-/** 
- * @class SdFatFs SdFatFs.h 
+/**
+ * @class SdFatFs SdFatFs.h
  * @brief SD FAT File system
  */
 class SdFatFs
@@ -47,7 +47,7 @@ public:
      * @brief Deinitialize SD FAT File System
      */
     int end();
-#if defined(BOARD_RTL8710) 
+#if defined(BOARD_RTL8710)
 	void WP_Off();
 	void WP_On();
 	void InsertSD();
@@ -73,7 +73,7 @@ public:
      * @param[in] bufsize The size of result_buf. If results exceed this size, then the results larger than this size would be discard.
      * @return Return 0 if success. Return negativate value for a failure.
      */
-    int readDir(char *path, char *result_buf, unsigned int bufsize);
+    int readDir(const char *path, char *result_buf, unsigned int bufsize);
 
     /**
      * @brief Create folder
@@ -81,7 +81,7 @@ public:
      * @param[in] absolute_path The absolute directory path to be created.
      * @return Return 0 if success. Return negativate value for a failure.
      */
-    int mkdir(char *absolute_path);
+    int mkdir(const char *absolute_path);
 
     /**
      * @brief Remove folder or file
@@ -89,7 +89,7 @@ public:
      * @param[in] absolute_path The absolute directory or file path to be deleted.
      * @return Return 0 if success. Return negativate value for a failure.
      */
-    int rm(char *absolute_path);
+    int rm(const char *absolute_path);
 
     /**
      * @brief Check if a specific path is a directory
@@ -97,7 +97,7 @@ public:
      * @param[in] absolute_path The absolute path to be queried
      * @return Return 1 if it is directory. And 0 vise versa.
      */
-    unsigned char isDir(char *absolute_path);
+    unsigned char isDir(const char *absolute_path);
 
     /**
      * @brief Check if a specific path is a file
@@ -105,7 +105,7 @@ public:
      * @param[in] absolute_path The absolute path to be queried
      * @return Return 1 if it is file. And 0 vise versa.
      */
-    unsigned char isFile(char *absolute_path);
+    unsigned char isFile(const char *absolute_path);
 
     /**
      * @brief Get last modified time for a file or directory
@@ -119,22 +119,22 @@ public:
      * @param[in] second field "second" contains no valid information in current version
      * @return Return 0 if success. Return negativate value for a failure.
      */
-    int getLastModTime(char *absolute_path, uint16_t *year, uint16_t *month, uint16_t *date, uint16_t *hour, uint16_t *minute, uint16_t *second);
+    int getLastModTime(const char *absolute_path, uint16_t *year, uint16_t *month, uint16_t *date, uint16_t *hour, uint16_t *minute, uint16_t *second);
 
     /* get file size and arttribute */
-    int getFsize(char *absolute_path, uint32_t *size, unsigned char *attr = NULL);
+    int getFsize(const char *absolute_path, uint32_t *size, unsigned char *attr = NULL);
 
     /* SD CSD size 16 bytes */
-    char getCSD(unsigned char * csd_data); 
-    
-    /*  Get volume label 
+    char getCSD(unsigned char * csd_data);
+
+    /*  Get volume label
     * @param[in] absolute_path The absolute path to be changed
-    * @param[in] bufname  Pointer to a buffer to return the volume label 
-    * @param[in] svn Pointer to a variable to return the volume serial number 
+    * @param[in] bufname  Pointer to a buffer to return the volume label
+    * @param[in] svn Pointer to a variable to return the volume serial number
     * @return Return 0 if success. Return negativate value for a failure.
     */
-    
-    int getLabel(char *absolute_path, char *bufname, uint32_t *svn);
+
+    int getLabel(const char *absolute_path, char *bufname, uint32_t *svn);
 
 
     /**
@@ -151,15 +151,16 @@ public:
      * @param[in] second field "second" contains no valid information in current version
      * @return Return 0 if success. Return negativate value for a failure.
      */
-    int setLastModTime(char *absolute_path, uint16_t year, uint16_t month, uint16_t date, uint16_t hour, uint16_t minute, uint16_t second);
+    int setLastModTime(const char *absolute_path, uint16_t year, uint16_t month, uint16_t date, uint16_t hour, uint16_t minute, uint16_t second);
 
     /**
      * @brief Open a file
      *
      * @param[in] absolute_path the path to a file
+     * @param mode like posix r,r+,w,w+,a,a+
      * @return The file object which is instance of SdFatFile
      */
-    SdFatFile open(char *absolute_path);
+    SdFatFile open(const char *absolute_path, const char* mode = "r");
 
     /**
      * @brief Return current status of SD
@@ -173,7 +174,7 @@ private:
     char logical_drv[4];
     int drv_num;
 
-    int getAttribute(char *absolute_path, unsigned char *attr);
+    int getAttribute(const char *absolute_path, unsigned char *attr);
 };
 
 #endif
