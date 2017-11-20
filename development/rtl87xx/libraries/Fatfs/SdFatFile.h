@@ -82,6 +82,18 @@ public:
      * @return The succeessful written byte count
      */
     int read(void *buf, uint16_t nbyte);
+    
+    /**
+     * @brief Read bytes from file until newline or buf size reach
+     *        newline replace by \0 as string end
+     *
+     * @param[in] buf The buffer to store the content
+     * @param[in] nbyte The buffer size. (Or can be regarded as desired length to read)
+     * @return The succeessful written byte count, if returned number will be same as buffer size no newline found
+     *         if 0 return its mean empty line
+     *         if -1 return it is nothing to read
+     */
+    int readline(void *buf, uint16_t nbyte);
 
     /**
      * @brief Change curser to sepcific position
@@ -97,6 +109,13 @@ public:
      * @return Return 0 if success. Return negative value if failure.
      */
     int close();
+
+    /**
+     * @brief Get file size
+     *
+     * @return file size in bytes
+    */
+    size_t size();
 
     friend class SdFatFs;
 

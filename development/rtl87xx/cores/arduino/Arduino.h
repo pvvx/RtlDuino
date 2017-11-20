@@ -47,9 +47,9 @@ extern uint32_t SystemCoreClock;
 extern void Init_CPU_CLK_UART(int clkn, int baud);
 extern void sys_info(void);
 /* HalGetChipId:
- * 0xff - RTL8711AM, 0xfe - RTL8195AM, 0xfd - RTL8711AF, 
+ * 0xff - RTL8711AM, 0xfe - RTL8195AM, 0xfd - RTL8711AF,
  * 0xfc - RTL8710AF, 0xfb - RTL8711AN, 0xfa - RTL8710AM */
-extern unsigned char HalGetChipId(void); 
+extern unsigned char HalGetChipId(void);
 extern unsigned int HalGetCpuClk(void);
 
 extern void wait_us(int us);
@@ -63,10 +63,10 @@ extern int rtl_printf(const char *fmt, ...);
 extern int rtl_sprintf(char* str, const char* fmt, ...);
 
 #ifndef printf
-#define printf		rtl_printf
+//#define printf		rtl_printf
 #endif
 #ifndef sprintf
-#define sprintf		rtl_sprintf
+//#define sprintf		rtl_sprintf
 #endif
 
 /*
@@ -161,9 +161,9 @@ extern void debug_on(void);
 
 extern unsigned int GetFlashSize(void); // default 1048576 bytes (1 Mbytes)
 /* FlashID: manufacturer ID : memory type : memory density
-  0xC22015 - MXIC MX25L1606E, F11AMIM13 (RTL8711AM) module, 
+  0xC22015 - MXIC MX25L1606E, F11AMIM13 (RTL8711AM) module,
   0xC22014 - MXIC MX25L8006E, RTL00 (RTL8710AF) module */
-extern unsigned int GetFlashId(void); 
+extern unsigned int GetFlashId(void);
 
 // C++ functions
 #ifdef __cplusplus

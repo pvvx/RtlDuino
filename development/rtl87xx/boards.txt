@@ -8,11 +8,12 @@ rtlmodule_rtl8710.pid.0=0x003d
 rtlmodule_rtl8710.upload.tool=jlink
 #rtlmodule_rtl8710.upload.protocol=mbed_dap
 rtlmodule_rtl8710.upload.protocol=jlink
-rtlmodule_rtl8710.upload.maximum_size=372736
+rtlmodule_rtl8710.upload.maximum_size=1048576
 #rtlmodule_rtl8710.upload.use_1200bps_touch=false
 rtlmodule_rtl8710.upload.wait_for_upload_port=false
 rtlmodule_rtl8710.upload.native_usb=false
 rtlmodule_rtl8710.build.mcu=cortex-m3
+#rtlmodule_rtl8710.build.f_cpu=166666666L
 rtlmodule_rtl8710.build.f_cpu=166666666L
 #rtlmodule_rtl8710.build.usb_product="Module RTL8710"
 rtlmodule_rtl8710.build.board=rtlmodule
@@ -42,6 +43,31 @@ rtlmodule_rtl8710.menu.upload_method.dapimg=DAP-Link IMG
 rtlmodule_rtl8710.menu.upload_method.dapimg.upload.protocol=dapimg
 rtlmodule_rtl8710.menu.upload_method.dapimg.upload.tool=dapimg
 
+
+rtlmodule_rtl8710.menu.upload_method.buspirate=Bus Pirate
+rtlmodule_rtl8710.menu.upload_method.buspirate.build.openocdcfg=buspirate.cfg
+rtlmodule_rtl8710.menu.upload_method.buspirate.upload.tool=openocd
+
+rtlmodule_rtl8710.menu.upload_method.jlink=JLink
+rtlmodule_rtl8710.menu.upload_method.jlink.build.openocdcfg=jlink.cfg
+rtlmodule_rtl8710.menu.upload_method.jlink.upload.tool=openocd
+
+
+rtlmodule_rtl8710.menu.upload_method.stlinkv1=STLink V1
+rtlmodule_rtl8710.menu.upload_method.stlinkv1.build.openocdcfg=stlink-v1.cfg
+rtlmodule_rtl8710.menu.upload_method.stlinkv1.upload.tool=openocd
+
+rtlmodule_rtl8710.menu.upload_method.stlinkv2=STLink V2
+rtlmodule_rtl8710.menu.upload_method.stlinkv2.build.openocdcfg=stlink-v2.cfg
+rtlmodule_rtl8710.menu.upload_method.stlinkv2.upload.tool=openocd
+
+rtlmodule_rtl8710.menu.upload_method.stlinkv21=STLink V2-1
+rtlmodule_rtl8710.menu.upload_method.stlinkv21.build.openocdcfg=stlink-v2-1.cfg
+rtlmodule_rtl8710.menu.upload_method.stlinkv21.upload.tool=openocd
+
+rtlmodule_rtl8710.menu.upload_method.ulink=ULink
+rtlmodule_rtl8710.menu.upload_method.ulink.build.openocdcfg=ulink.cfg
+rtlmodule_rtl8710.menu.upload_method.ulink.upload.tool=openocd
 
 rtlmodule_rtl8711am.name=F11AMIM13 (RTL8711AM)
 rtlmodule_rtl8711am.vid.0=0x2341

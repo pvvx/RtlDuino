@@ -180,3 +180,7 @@ tools.dapimg.upload.network_pattern="{runtime.tools.ameba_tools.path}/upload_ota
 tools.dapimg.upload.network_pattern.windows="{runtime.tools.ameba_tools.path}/upload_ota.exe" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}\ota.bin"
 tools.dapimg.upload.network_pattern.macosx="{runtime.tools.ameba_tools.path}/upload_ota_macosx" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}/ota.bin"
 tools.dapimg.upload.network_pattern.linux="{runtime.tools.ameba_tools.path}/upload_ota_linux" -i "{serial.port}" -p "{network.port}" -f "{runtime.tools.ameba_tools.path}/ota.bin"
+
+tools.openocd.upload.params.verbose=
+tools.openocd.upload.params.quiet=
+tools.openocd.upload.pattern="/usr/bin/openocd" -f interface/{build.openocdcfg} -f {runtime.platform.path}/tools/rtl8710.ocd -c "init" -c "reset halt" -c "rtl8710_flash_auto_erase 1" -c "rtl8710_flash_auto_verify 1" -c "rtl8710_flash_write {runtime.tools.ameba_tools.path}/ram_all.bin 0" -c "reset" -c "shutdown"
